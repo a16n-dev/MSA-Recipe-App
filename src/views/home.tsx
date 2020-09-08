@@ -1,7 +1,10 @@
-import React, {MouseEvent, useContext} from 'react'
+import React, { MouseEvent, useContext } from 'react'
 import { createUseStyles, useTheme } from 'react-jss'
 import { auth, googleAuthProvider, facebookAuthProvider } from '../util/firebase';
 import { AuthContext } from '../context/Authcontext';
+import { Link } from 'react-router-dom';
+import {Types } from '../context/auth'
+import axios from 'axios'
 
 const useStyles = createUseStyles(theme => ({
     root: {
@@ -17,22 +20,42 @@ const Home = (props: homeProps) => {
     const theme = useTheme()
     const classes = useStyles({ ...props, theme })
 
-    const {state, dispatch} = useContext(AuthContext)
+    const { state, dispatch } = useContext(AuthContext)
 
     const handleGoogleLogin = async (e: MouseEvent) => {
         auth.signInWithPopup(googleAuthProvider).then(async (result) => {
             const { user } = result;
-            if(user){
+            console.log(user);
+            if (user) {
                 const idTokenResult = await user.getIdTokenResult();
-
+                console.log(idTokenResult);
+                console.log('sending req!');
+                axios({
+                    method: 'post',
+                    url: '/user',
+                    headers: {authToken: idTokenResult.token}
+                  }).then((res) => {
+                    console.log(res);
+                      if(res.status === 201){
+                          console.log('successful db entry created!');
+                      }
+                  }).catch((err) => {
+                      console.log('error!');
+                  });
+                  
                 dispatch({
-                    type: 'LOG_IN_USER',
-                    payload: { email: user.email, token: idTokenResult.token }
+                    type: Types.Login,
+                    payload: {
+                        email: user.email,
+                        token: idTokenResult.token,
+                        photoUrl: user.photoURL,
+                        name: user.displayName
+                    }
                 });
-    
+
                 // Post user data to api
             }
-           
+
         });
     }
 
@@ -40,28 +63,19 @@ const Home = (props: homeProps) => {
         auth.signInWithPopup(facebookAuthProvider).then(async (result) => {
             console.log(result);
             const { user } = result;
-            if(user){
+            if (user) {
                 const idTokenResult = await user.getIdTokenResult();
 
                 dispatch({
-                    type: 'LOG_IN_USER',
-                    payload: { email: user.email, token: idTokenResult.token }
+                    type: Types.Login,
+                    payload: { email: user.email, token: idTokenResult.token },
+                    photoUrl: user.photoURL,
+                    name: user.displayName
                 });
-    
+
                 // Post user data to api
             }
-           
-        });
-    }
 
-    const handleLogout = async (e: MouseEvent) => {
-        console.log(e);
-
-        // Logout
-        auth.signOut();
-        dispatch({
-            type: 'CLEAR_USER',
-            payload: null
         });
     }
 
@@ -69,8 +83,6 @@ const Home = (props: homeProps) => {
         <div className={classes.root}>
             <button onClick={handleGoogleLogin}>Sign in with google!</button>
             <button onClick={handleFacebookLogin}>Sign in with facebook!</button>
-            <button onClick={handleLogout}>Logout!</button>
-            {JSON.stringify(state.user)}
         </div>
     )
 }

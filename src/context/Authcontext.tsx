@@ -5,7 +5,8 @@ import {Types, InitialStateType, AuthProviderProps} from './auth'
 
 
 const initialState = {
-    user: null
+    user: null,
+    loading: true
   }
 
 // Create context
@@ -34,7 +35,9 @@ const AuthProvider = ({children} : AuthProviderProps) => {
                     type: Types.Login,
                     payload: {
                         email: user.email,
-                        token: idTokenResult.token
+                        token: idTokenResult.token,
+                        photoUrl: user.photoURL,
+                        name: user.displayName
                     }
                 })
             } else {
