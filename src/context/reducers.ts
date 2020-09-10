@@ -1,4 +1,5 @@
 import {Types, InitialStateType} from './auth'
+import { user } from '../types';
 
 type ActionMap<M extends { [index: string]: any }> = {
     [Key in keyof M]: M[Key] extends undefined
@@ -15,10 +16,8 @@ type ActionMap<M extends { [index: string]: any }> = {
 
 type AuthPayload = {
     [Types.Login]: {
-        email: string;
-        token: any;
-        photoUrl: string;
-        name: string
+        user: user
+        token: string;
     };
     [Types.Clear]: null
     
@@ -29,7 +28,7 @@ export type AuthActions = ActionMap<AuthPayload>[keyof ActionMap<AuthPayload>];
 export const authReducer = (state: InitialStateType, action: AuthActions) => {
     switch (action.type) {
         case Types.Login:
-            return { ...state, user: action.payload, loading: false }
+            return { ...state, user: action.payload.user, token: action.payload.token, loading: false }
         case Types.Clear:
             return { ...state, user: null, loading: false }
         default:

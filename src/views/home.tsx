@@ -1,15 +1,20 @@
 import React, { MouseEvent, useContext } from 'react'
-import { createUseStyles, useTheme } from 'react-jss'
 import { auth, googleAuthProvider, facebookAuthProvider } from '../util/firebase';
 import { AuthContext } from '../context/Authcontext';
 import { Link } from 'react-router-dom';
 import {Types } from '../context/auth'
 import axios from 'axios'
+import { makeStyles, Grid, Card, CardContent, Typography } from '@material-ui/core';
+import { FacebookLoginButton, GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 
-const useStyles = createUseStyles(theme => ({
+
+const useStyles = makeStyles(theme => ({
     root: {
-
-    }
+        height: '100%',
+        paddingTop: '10%',
+        paddingLeft: '10%',
+        paddingRight: '10%'
+    },
 }));
 
 interface homeProps {
@@ -17,19 +22,16 @@ interface homeProps {
 }
 
 const Home = (props: homeProps) => {
-    const theme = useTheme()
-    const classes = useStyles({ ...props, theme })
+    const classes = useStyles()
 
     const { state, dispatch } = useContext(AuthContext)
 
-    const handleGoogleLogin = async (e: MouseEvent) => {
+    const handleGoogleLogin = async () => {
         auth.signInWithPopup(googleAuthProvider).then(async (result) => {
             const { user } = result;
-            console.log(user);
             if (user) {
                 const idTokenResult = await user.getIdTokenResult();
-                console.log(idTokenResult);
-                console.log('sending req!');
+
                 axios({
                     method: 'post',
                     url: '/user',
@@ -53,13 +55,12 @@ const Home = (props: homeProps) => {
                     }
                 });
 
-                // Post user data to api
             }
 
         });
     }
 
-    const handleFacebookLogin = async (e: MouseEvent) => {
+    const handleFacebookLogin = async () => {
         auth.signInWithPopup(facebookAuthProvider).then(async (result) => {
             console.log(result);
             const { user } = result;
@@ -80,10 +81,24 @@ const Home = (props: homeProps) => {
     }
 
     return (
-        <div className={classes.root}>
-            <button onClick={handleGoogleLogin}>Sign in with google!</button>
-            <button onClick={handleFacebookLogin}>Sign in with facebook!</button>
-        </div>
+        <Grid container className={classes.root} alignItems='flex-start' justify='space-around'>
+            <Grid item xs={12} md={8}>
+                <Typography variant='h2'>Recipe app</Typography>
+                <Typography variant='body1'>Create and share your favourite recipes. more placeholder text and stuff</Typography>
+            </Grid>
+            <Grid item  xs={12} md={4}>
+                <Card>
+                    <CardContent>
+                        <Grid container direction='column' spacing={2}>
+                        <Typography>Get started today - completely free!</Typography>
+                        <GoogleLoginButton onClick={handleGoogleLogin}>Sign in with Google</GoogleLoginButton><br/>
+                        <FacebookLoginButton onClick={handleFacebookLogin}>Sign in with Facebook</FacebookLoginButton><br/>
+                        <MicrosoftLoginButton onClick={handleFacebookLogin}>Sign in with Microsoft</MicrosoftLoginButton><br/>
+                        </Grid>
+                    </CardContent>
+                </Card>
+            </Grid>
+        </Grid>
     )
 }
 

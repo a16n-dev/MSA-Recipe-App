@@ -6,6 +6,7 @@ import {Types, InitialStateType, AuthProviderProps} from './auth'
 
 const initialState = {
     user: null,
+    token: '',
     loading: true
   }
 
@@ -30,14 +31,16 @@ const AuthProvider = ({children} : AuthProviderProps) => {
             if(user){
                 // If there is a logged in user
                 const idTokenResult = await user.getIdTokenResult() 
-            
+                console.log(idTokenResult.token);
                 dispatch({
                     type: Types.Login,
                     payload: {
-                        email: user.email,
+                        user: {
+                            email: user.email,
+                            photoUrl: user.photoURL,
+                            name: user.displayName
+                        },
                         token: idTokenResult.token,
-                        photoUrl: user.photoURL,
-                        name: user.displayName
                     }
                 })
             } else {

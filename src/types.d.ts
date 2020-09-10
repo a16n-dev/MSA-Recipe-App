@@ -1,5 +1,13 @@
 export type recipe = {
-    name: String,
-    ingredients: String[],
-    method: String[]
+    _id: string
+    name: string
+    ingredients: string[]
+    method: string[]
+    notes: string
+}
+
+export type user = {
+    name: String
+    photoUrl: String
+    email: String
 }

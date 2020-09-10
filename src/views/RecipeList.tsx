@@ -1,9 +1,9 @@
-import React, { useContext, useState, useEffect } from 'react'
+import React, {useContext, useEffect, useState} from 'react'
 import { AuthContext } from '../context/Authcontext';
-import axios from 'axios';
 import { recipe } from '../types';
+import axios from 'axios'
 import { Link } from 'react-router-dom';
-import { makeStyles } from '@material-ui/core';
+import { makeStyles, Card, Grid, CardHeader, CardContent } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -11,18 +11,21 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-interface dashboardProps {
+interface RecipeListProps {
 
 }
 
-const Dashboard = (props: dashboardProps) => {
+const RecipeList = (props: RecipeListProps) => {
+
     const classes = useStyles()
 
-    const { state, dispatch } = useContext(AuthContext)
+    const {state, dispatch} = useContext(AuthContext)
 
     const [recipes, setRecipes] = useState<recipe[]>([])
 
-    useEffect(() => {
+    useEffect(()=>{
+        // Fetch users recipesv
+        console.log(axios.defaults.baseURL);
         axios({
             method: 'get',
             url: '/recipe',
@@ -35,19 +38,21 @@ const Dashboard = (props: dashboardProps) => {
         });
     }, [state.token])
 
-
+    if(recipes.length === 0) {
+        return (<h1>No recipes found</h1>)
+    }
 
     return (
-        <div className={classes.root}>
-            Recently added
+        <Grid container className={classes.root}>
             {recipes.map(e => (
                 <Link key={e._id} to={`recipes/${e._id}`}>
-                    <p>{e.name}</p>
+                    <Card>
+                        <CardContent>{e.name}</CardContent>
+                    </Card>
                 </Link>
             ))}
-            Explore
-        </div>
+        </Grid>
     )
 }
 
-export default Dashboard
+export default RecipeList

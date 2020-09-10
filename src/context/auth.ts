@@ -6,6 +6,7 @@ export interface AuthProviderProps {
 
 export type InitialStateType = {
     user: any
+    token: String
     loading: boolean
 }
 
