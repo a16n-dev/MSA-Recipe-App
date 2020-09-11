@@ -48,8 +48,6 @@ const NoteDialog = (props: NoteDialogProps) => {
         id: ''
     })
 
-
-
     const {notes, index, open, setOpen,setNotes} = props
 
     useEffect(()=>{

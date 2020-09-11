@@ -10,6 +10,7 @@ import RecipeEditForm from '../components/forms/RecipeEditForm';
 import RecipeEditView from '../components/RecipeEditView/RecipeEditView';
 import RecipeView from '../components/RecipeView/RecipeView';
 import Loading from '../components/Loading/Loading';
+import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -52,6 +53,8 @@ const Recipe = (props: RecipeProps) => {
 
     const { state } = useContext(AuthContext)
 
+    const { enqueueSnackbar } = useSnackbar();
+
     // If edit mode is active
     const [edit, setEdit] = useState<boolean>(false)
     const [currentRecipe, setCurrentRecipe] = useState<recipe | undefined>(undefined)
@@ -93,12 +96,27 @@ const Recipe = (props: RecipeProps) => {
         }
     }, [recipeID, state, state.token]);
 
-    const handleSubmitEdits = () => {
-        // Send request
+    const updateRecipe = (recipe: recipe) => {
 
-        // Set state
+        const {name, ingredients, method, notes } = recipe
 
-        // If use was creating new recipe redirect them to the correct recipe page
+        // Update database
+        console.log(recipe);
+        Axios({
+            method: 'patch',
+            url: `/recipe/${currentRecipe?._id}`,
+            headers: {authToken: state.token},
+            data: {
+                name, ingredients, method, notes
+            }
+        }).then((result) => {
+            if(result.status===200){
+                setCurrentRecipe(result.data)
+                enqueueSnackbar('Changes Saved', { variant: 'success' })
+            }
+        }).catch((err) => {
+            
+        });
     }
 
     if (loading) {
@@ -110,7 +128,7 @@ const Recipe = (props: RecipeProps) => {
     return (
         <>
         {edit ? 
-        <RecipeEditView currentRecipe={currentRecipe} setCurrentRecipe={setCurrentRecipe} setEdit={setEdit}/>
+        <RecipeEditView isNew={recipeID === 'new'} currentRecipe={currentRecipe} setCurrentRecipe={updateRecipe} setEdit={setEdit}/>
         : <RecipeView currentRecipe={currentRecipe} setCurrentRecipe={setCurrentRecipe} setEdit={setEdit}></RecipeView>}
         </>
     )

@@ -31,7 +31,7 @@ const EditTitleForm = (props: EditTitleFormProps) => {
     }
 
     return (
-        <Input className={classes.root} error={error} value={title} onChange={handleChange}></Input>
+        <Input placeholder={'Recipe name'} className={classes.root} error={error} value={title} onChange={handleChange}></Input>
     )
 }
 

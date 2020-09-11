@@ -99,7 +99,7 @@ const RecipeView = (props: RecipeViewProps) => {
         <div className={classes.root}>
             <div className={classes.header}>
                 {/* <Typography variant={'h3'}>{name}</Typography> */}
-                <img className={classes.image} alt={currentRecipe.name}></img>
+                <img className={classes.image} alt={currentRecipe.name} src={`http://localhost:8000/recipe/${currentRecipe._id}/image`}></img>
                 <div className={classes.titleBox}>
                     <Typography variant={'h3'}>{currentRecipe.name}</Typography>
                     <Typography variant={'h5'}>{currentRecipe.authorName}</Typography>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { makeStyles, Typography, Divider, Grid, Button } from '@material-ui/core';
 import EditIngredientForm from '../EditIngredientForm/EditIngredientForm';
 import EditMethodForm from '../EditMethodForm/EditMethodForm';
@@ -9,6 +9,11 @@ import { useSnackbar } from 'notistack';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
 import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
 import ShareButton from '../ShareButton/ShareButton';
+import ConfirmationButton from '../ConfimationButton/ConfirmationButton';
+import Axios from 'axios';
+import { AuthContext } from '../../context/Authcontext';
+import { useHistory } from 'react-router-dom';
+import RecipeImageForm from '../RecipeImageForm/RecipeImageForm';
 
 
 const useStyles = makeStyles(theme => ({
@@ -29,7 +34,7 @@ const useStyles = makeStyles(theme => ({
         display: 'grid',
         columnGap: theme.spacing(2),
         gridTemplateRows: 'auto auto',
-        gridTemplateColumns: '150px auto auto',
+        gridTemplateColumns: '160px auto auto',
         height: '160px',
         [theme.breakpoints.down('xs')]: {
             textAlign: 'center'
@@ -39,14 +44,14 @@ const useStyles = makeStyles(theme => ({
     gridItem: {
         padding: theme.spacing(1),
         height: '100%',
-        overflowY: 'auto'  
+        overflowY: 'auto'
     },
     author: {
         color: '#aaa'
     },
     image: {
-        width: '150px',
-        height: '150px',
+        width: '160px',
+        height: '160px',
         gridRow: '1 / 3'
     },
     buttonBar: {
@@ -71,8 +76,9 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface RecipeEditViewProps {
+    isNew: boolean
     currentRecipe: recipe
-    setCurrentRecipe: React.Dispatch<React.SetStateAction<recipe | undefined>>
+    setCurrentRecipe: (a: recipe) => void
     setEdit: React.Dispatch<React.SetStateAction<boolean>>
 }
 
@@ -81,6 +87,9 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
 
     const { enqueueSnackbar } = useSnackbar();
 
+    const { state, dispatch } = useContext(AuthContext);
+
+    const history = useHistory()
 
     const [name, setName] = useState<string>('')
     const [ingredients, setIngredients] = useState<string[]>([])
@@ -93,21 +102,55 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
     })
 
 
-    const { currentRecipe, setCurrentRecipe, setEdit } = props
+    const { currentRecipe, setCurrentRecipe, setEdit, isNew } = props
 
-    useEffect(()=>{
+    useEffect(() => {
         //set state
         setName(currentRecipe.name)
         setIngredients(currentRecipe.ingredients)
         setMethod(currentRecipe.method)
         setNotes(currentRecipe.notes)
-    },[currentRecipe])
+    }, [currentRecipe])
 
     const handleDiscardEdits = () => {
         setEdit(false)
     }
 
-    const handleSubmitEdits = (e: any) => {
+    const createNewRecipe = () => {
+
+        const res: any = validate()
+
+        Axios({
+            method: 'post',
+            url: '/recipe',
+            headers: {authToken: state.token},
+            data: res
+        }).then((res) => {
+            if(res.status === 201){
+                console.log(res);
+                history.push(`/recipes/${res.data.id}`)
+                setEdit(false)
+            }
+        }).catch((err) => {
+            
+        });
+    }
+
+    const deleteRecipe = () => {
+        Axios({
+            method: 'delete',
+            url: `/recipe/${currentRecipe._id}`,
+            headers: { authToken: state.token }
+        }).then((res) => {
+            if (res.status === 200) {
+                history.push('/recipes')
+            }
+        }).catch((err) => {
+            enqueueSnackbar('Could not delete recipe', { variant: 'error' })
+        });
+    }
+
+    const validate = () => {
         const saveMethod: string[] = Array.from(method)
         const saveIngredients: string[] = Array.from(ingredients)
         setError({
@@ -116,48 +159,53 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
             method: false
         })
         //Check valid
-        if(name === ''){
-            setError({...error, name: true})
-            enqueueSnackbar('Recipe name cannot be empty', {variant: 'error'})
+        if (name === '') {
+            setError({ ...error, name: true })
+            enqueueSnackbar('Recipe name cannot be empty', { variant: 'error' })
+            return null
         } else if (saveIngredients.length <= 1) {
-            setError({...error, ingredients: true})
-            enqueueSnackbar('Recipe must have at least one ingredient', {variant: 'error'})
+            setError({ ...error, ingredients: true })
+            enqueueSnackbar('Recipe must have at least one ingredient', { variant: 'error' })
+            return null
         } else if (saveMethod.length <= 1) {
-            setError({...error, method: true})
-            enqueueSnackbar('Recipe must have at least one step', {variant: 'error'})
+            setError({ ...error, method: true })
+            enqueueSnackbar('Recipe must have at least one step', { variant: 'error' })
+            return null
         } else {
-            setEdit(false)
-            enqueueSnackbar('Changes saved', {variant: 'success'})
+
             saveMethod.pop()
             saveIngredients.pop()
 
-            setCurrentRecipe({
-                ...currentRecipe,
+            return {
                 name,
                 ingredients: saveIngredients,
                 method: saveMethod,
                 notes
-            })
+            }
         }
+    }
 
+    const handleSubmitEdits = (e: any) => {
 
-        
-        
-        // Send request -> patch if existing and post if new recipe
+        const res: any = validate()
 
-
-        // Set state
-
-        // If use was creating new recipe redirect them to the correct recipe page
+        if (res !== null) {
+            setCurrentRecipe({
+                ...currentRecipe,
+                ...res
+            })
+            setEdit(false)
+        }
+       
     }
 
     //Show recipe view
     return (
         <div className={classes.root}>
             <div className={classes.header}>
-                <img className={classes.image}></img>
+                <RecipeImageForm recipeId={currentRecipe._id}/>
                 <div className={classes.titleBox}>
-                    <EditTitleForm title={name} setTitle={setName} error={error.name}/>
+                    <EditTitleForm title={name} setTitle={setName} error={error.name} />
                     <Typography className={classes.author} variant={'h4'}>{currentRecipe.authorName}</Typography>
                 </div>
                 <div className={classes.infoBox}>
@@ -165,29 +213,50 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                     <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> Servings</Typography>
                 </div>
                 <div className={classes.buttonBar}>
-                <Button variant={'contained'} color={'secondary'} onClick={handleSubmitEdits}>Save changes</Button>
-                <Button variant={'contained'} color={'secondary'} onClick={handleDiscardEdits}>Discard Changes</Button>
+                    {isNew ?
+                        <>
+                            <Button variant={'contained'} color={'secondary'} onClick={createNewRecipe}>Create Recipe</Button>
+                            <ConfirmationButton
+                                onClick={() => { history.push('/recipes') }}
+                                title={'Discard new recipe?'}
+                                message={`Are you sure you want to leave without saving?`}
+                                action={'Leave'}
+                            >Discard Recipe</ConfirmationButton>
+                        </>
+                        : <>
+                            <Button variant={'contained'} color={'secondary'} onClick={handleSubmitEdits}>Save changes</Button>
+                            <Button variant={'contained'} color={'secondary'} onClick={handleDiscardEdits}>Discard Changes</Button>
+                            <ConfirmationButton
+                                onClick={deleteRecipe}
+                                title={`Delete ${currentRecipe.name}`}
+                                message={`Are you sure you want to delete ${currentRecipe.name}? This cannot be undone`}
+                                action={'Delete'}
+                            >Delete Recipe</ConfirmationButton>
+                        </>
+                    }
+
+
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>
-                
+
                 <Grid item xs={12} sm={3} md={2} className={classes.gridItem}>
-                <Typography variant={'h5'} className={classes.sectionHeader}>Ingredients</Typography>
-                    <EditIngredientForm ingredients={ingredients} setIngredients={setIngredients}/>
+                    <Typography variant={'h5'} className={classes.sectionHeader}>Ingredients</Typography>
+                    <EditIngredientForm ingredients={ingredients} setIngredients={setIngredients} />
                 </Grid>
 
                 <Grid container item xs={12} sm={9} md={10} lg={8}>
                     <Divider orientation="vertical" flexItem />
                     <Grid item xs className={classes.gridItem}>
-                    <Typography variant={'h5'} className={classes.sectionHeader}>Method</Typography>
-                    <EditMethodForm method={method} setMethod={setMethod}/>
+                        <Typography variant={'h5'} className={classes.sectionHeader}>Method</Typography>
+                        <EditMethodForm method={method} setMethod={setMethod} />
                     </Grid>
                     <Divider orientation="vertical" flexItem />
                 </Grid>
 
                 <Grid item xs={12} lg={2} className={classes.gridItem}>
-                <Typography variant={'h5'} className={classes.sectionHeader}>Notes</Typography>
-                    <NoteBar/>
+                    <Typography variant={'h5'} className={classes.sectionHeader}>Notes</Typography>
+                    <NoteBar />
                 </Grid>
 
             </Grid>
