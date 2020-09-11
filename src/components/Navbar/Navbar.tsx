@@ -74,7 +74,7 @@ const Navbar = (props: NavbarProps) => {
 
     return (
         <Fragment>
-        <AppBar position="static" className={classes.root}>
+        <AppBar position="static" className={classes.root} color={'secondary'}>
             <Toolbar>
                 <Hidden smUp>
                 <IconButton onClick={()=>setDrawer(!drawer)}>

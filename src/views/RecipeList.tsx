@@ -3,7 +3,8 @@ import { AuthContext } from '../context/Authcontext';
 import { recipe } from '../types';
 import axios from 'axios'
 import { Link } from 'react-router-dom';
-import { makeStyles, Card, Grid, CardHeader, CardContent } from '@material-ui/core';
+import { makeStyles, Card, Grid, CardContent } from '@material-ui/core';
+import Loading from '../components/Loading/Loading';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -19,9 +20,10 @@ const RecipeList = (props: RecipeListProps) => {
 
     const classes = useStyles()
 
-    const {state, dispatch} = useContext(AuthContext)
+    const {state} = useContext(AuthContext)
 
     const [recipes, setRecipes] = useState<recipe[]>([])
+    const [loading, setLoading] = useState<boolean>(true)
 
     useEffect(()=>{
         // Fetch users recipesv
@@ -35,8 +37,14 @@ const RecipeList = (props: RecipeListProps) => {
             setRecipes(data)
         }).catch((err) => {
             console.log('error!');
+        }).finally(()=>{
+            setLoading(false)
         });
     }, [state.token])
+
+    if(loading){
+        return (<Loading/>)
+    }
 
     if(recipes.length === 0) {
         return (<h1>No recipes found</h1>)

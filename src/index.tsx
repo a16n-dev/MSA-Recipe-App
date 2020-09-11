@@ -6,10 +6,8 @@ import theme from './theme/theme'
 import { BrowserRouter } from 'react-router-dom'
 import { AuthProvider } from './context/Authcontext';
 import { ThemeProvider } from '@material-ui/core/styles';
-import axios from 'axios'
-import { CssBaseline } from '@material-ui/core';
-
-// axios.defaults.baseURL = 'https://recipe-app-api.azurewebsites.net';
+import { CssBaseline, Grow } from '@material-ui/core';
+import { SnackbarProvider } from 'notistack';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -17,7 +15,9 @@ ReactDOM.render(
       <ThemeProvider theme={theme}>
         <CssBaseline/>
         <AuthProvider>
+        <SnackbarProvider maxSnack={1} TransitionComponent={Grow}>
           <App />
+          </SnackbarProvider>
         </AuthProvider>
       </ThemeProvider>
     </BrowserRouter>

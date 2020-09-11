@@ -1,20 +1,40 @@
-import React, { MouseEvent, useContext } from 'react'
-import { auth, googleAuthProvider, facebookAuthProvider } from '../util/firebase';
+import React, { useContext } from 'react'
+import { auth, googleAuthProvider, facebookAuthProvider, microsoftAuthProvider } from '../util/firebase';
 import { AuthContext } from '../context/Authcontext';
-import { Link } from 'react-router-dom';
 import {Types } from '../context/auth'
 import axios from 'axios'
 import { makeStyles, Grid, Card, CardContent, Typography } from '@material-ui/core';
 import { FacebookLoginButton, GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
-
+import bgImg from '../resource/img/background.jpg'
 
 const useStyles = makeStyles(theme => ({
     root: {
+        position: 'relative',
+        overflow: 'hidden',
         height: '100%',
         paddingTop: '10%',
         paddingLeft: '10%',
-        paddingRight: '10%'
+        paddingRight: '10%',
     },
+    backgroundImage: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        bottom: 0,
+        right: 0,
+        zIndex: -100,
+        background: `url(${bgImg})`,
+        backgroundSize: 'cover',
+        filter: 'brightness(0.4)',
+        transform: 'scale(1.1)'
+    },
+    titleBox: {
+        color: 'white',
+        maxWidth: '30vw',
+        [theme.breakpoints.down('sm')]: {
+            maxWidth: 'initial',
+        }
+    }
 }));
 
 interface homeProps {
@@ -24,67 +44,28 @@ interface homeProps {
 const Home = (props: homeProps) => {
     const classes = useStyles()
 
-    const { state, dispatch } = useContext(AuthContext)
+    const { dispatch } = useContext(AuthContext)
 
     const handleGoogleLogin = async () => {
-        auth.signInWithPopup(googleAuthProvider).then(async (result) => {
-            const { user } = result;
-            if (user) {
-                const idTokenResult = await user.getIdTokenResult();
-
-                axios({
-                    method: 'post',
-                    url: '/user',
-                    headers: {authToken: idTokenResult.token}
-                  }).then((res) => {
-                    console.log(res);
-                      if(res.status === 201){
-                          console.log('successful db entry created!');
-                      }
-                  }).catch((err) => {
-                      console.log('error!');
-                  });
-                  
-                dispatch({
-                    type: Types.Login,
-                    payload: {
-                        email: user.email,
-                        token: idTokenResult.token,
-                        photoUrl: user.photoURL,
-                        name: user.displayName
-                    }
-                });
-
-            }
-
-        });
+        auth.signInWithRedirect(googleAuthProvider)
     }
 
     const handleFacebookLogin = async () => {
-        auth.signInWithPopup(facebookAuthProvider).then(async (result) => {
-            console.log(result);
-            const { user } = result;
-            if (user) {
-                const idTokenResult = await user.getIdTokenResult();
+        auth.signInWithRedirect(facebookAuthProvider);
+    }
 
-                dispatch({
-                    type: Types.Login,
-                    payload: { email: user.email, token: idTokenResult.token },
-                    photoUrl: user.photoURL,
-                    name: user.displayName
-                });
-
-                // Post user data to api
-            }
-
-        });
+    const handleMicrosoftLogin = async () => {
+        auth.signInWithRedirect(microsoftAuthProvider);
     }
 
     return (
         <Grid container className={classes.root} alignItems='flex-start' justify='space-around'>
+            <div className={classes.backgroundImage}></div>
             <Grid item xs={12} md={8}>
-                <Typography variant='h2'>Recipe app</Typography>
+                <div className={classes.titleBox}>
+                <Typography variant='h2'><b>Recipe app</b></Typography>
                 <Typography variant='body1'>Create and share your favourite recipes. more placeholder text and stuff</Typography>
+                </div>
             </Grid>
             <Grid item  xs={12} md={4}>
                 <Card>
@@ -93,7 +74,7 @@ const Home = (props: homeProps) => {
                         <Typography>Get started today - completely free!</Typography>
                         <GoogleLoginButton onClick={handleGoogleLogin}>Sign in with Google</GoogleLoginButton><br/>
                         <FacebookLoginButton onClick={handleFacebookLogin}>Sign in with Facebook</FacebookLoginButton><br/>
-                        <MicrosoftLoginButton onClick={handleFacebookLogin}>Sign in with Microsoft</MicrosoftLoginButton><br/>
+                        <MicrosoftLoginButton onClick={handleMicrosoftLogin}>Sign in with Microsoft</MicrosoftLoginButton><br/>
                         </Grid>
                     </CardContent>
                 </Card>

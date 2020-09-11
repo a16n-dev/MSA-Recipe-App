@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { AuthContext } from '../../context/Authcontext';
 import { Redirect, Route, RouteProps } from 'react-router-dom';
+import Loading from '../Loading/Loading';
 
 /*
 Private route which will redirect the user to the home page if they are not authenticated.
@@ -14,7 +15,10 @@ const PrivateRoute = ({component: Component, ...rest}: RouteProps) => {
     if (!Component) return null;
 
     // Show a loading component until auth is resolved
-    if (state.loading) return (<h1>loading...</h1>);
+
+    if (state.loading) {
+        return (<Loading/>)
+    }
 
     return (
         <Route {...rest} render={props => (

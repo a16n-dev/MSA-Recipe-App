@@ -18,7 +18,7 @@ interface dashboardProps {
 const Dashboard = (props: dashboardProps) => {
     const classes = useStyles()
 
-    const { state, dispatch } = useContext(AuthContext)
+    const { state } = useContext(AuthContext)
 
     const [recipes, setRecipes] = useState<recipe[]>([])
 

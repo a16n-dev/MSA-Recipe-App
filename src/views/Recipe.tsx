@@ -1,12 +1,28 @@
-import React, { useContext, useState, useEffect, MouseEvent } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../context/Authcontext';
 import Axios from 'axios';
 import { recipe } from '../types';
-import { makeStyles, Typography, Divider, Grid } from '@material-ui/core';
-import clsx from 'clsx'
+import { makeStyles, Typography, Divider, Grid, TextareaAutosize } from '@material-ui/core';
+import EditIngredientForm from '../components/EditIngredientForm/EditIngredientForm';
+import EditMethodForm from '../components/EditMethodForm/EditMethodForm';
+import NoteBar from '../components/NoteBar/NoteBar';
+import RecipeEditForm from '../components/forms/RecipeEditForm';
+import RecipeEditView from '../components/RecipeEditView/RecipeEditView';
+import RecipeView from '../components/RecipeView/RecipeView';
+import Loading from '../components/Loading/Loading';
+
 const useStyles = makeStyles(theme => ({
     root: {
-        minHeight: '100%'
+        position: 'absolute',
+        top: 0,
+        bottom: 0,
+        display: 'grid',
+        gridTemplateRows: 'min-content auto',
+        width: '100%',
+        padding: theme.spacing(4),
+    },
+    detailContainer: {
+        minHeight: 0,
     },
     header: {
         height: '100px',
@@ -17,7 +33,9 @@ const useStyles = makeStyles(theme => ({
     gridItem: {
         padding: theme.spacing(1),
         border: '1px solid #ddd',
-        borderRadius: '5px'
+        borderRadius: '5px',
+        height: '100%',
+        overflowY: 'auto'  
     }
 }));
 
@@ -32,29 +50,31 @@ interface RecipeProps {
 const Recipe = (props: RecipeProps) => {
     const classes = useStyles()
 
-    const { state, dispatch } = useContext(AuthContext)
+    const { state } = useContext(AuthContext)
 
     // If edit mode is active
-    const [edit, setEdit] = useState<Boolean>(false)
-    const [recipe, setRecipe] = useState<recipe | undefined>(undefined)
+    const [edit, setEdit] = useState<boolean>(false)
+    const [currentRecipe, setCurrentRecipe] = useState<recipe | undefined>(undefined)
     const [loading, setLoading] = useState(true)
 
     const recipeID = props.match.params.id
 
     //if id is 'new' it means creating a new recipe
 
-
     // Fetch recipe. 
     useEffect(() => {
 
         if (recipeID === 'new') {
             setEdit(true)
-            setRecipe({
+            setCurrentRecipe({
                 _id: '',
                 name: '',
                 ingredients: [],
                 method: [],
-                notes: ''
+                notes: [],
+                authorName: '',
+                prepTime: 'string',
+                servings: 1,
             })
             setLoading(false)
         } else {
@@ -64,7 +84,7 @@ const Recipe = (props: RecipeProps) => {
                 headers: { authToken: state.token }
             }).then((result) => {
                 console.log(result);
-                setRecipe(result.data)
+                setCurrentRecipe(result.data)
             }).catch((err) => {
                 console.log(err);
             }).finally(() => {
@@ -73,12 +93,7 @@ const Recipe = (props: RecipeProps) => {
         }
     }, [recipeID, state, state.token]);
 
-    const handleSubmitEdits = (e: any) => {
-        e.preventDefault()
-        console.log(e);
-        console.log(e.target.elements);
-        // Get data from form
-
+    const handleSubmitEdits = () => {
         // Send request
 
         // Set state
@@ -87,68 +102,17 @@ const Recipe = (props: RecipeProps) => {
     }
 
     if (loading) {
-        return (<p>loading...</p>)
+        return (<Loading/>)
     }
-    if (!recipe) { return null }
-
-    const { name, ingredients, method, notes } = recipe
-
-    //Show edit form
-    if (edit) {
-        return (
-            <form onSubmit={handleSubmitEdits}>
-                <h1>Editing:</h1>
-                <label>Name</label><br/>
-                <input type={'text'} name='name'></input><br/>
-                <label>Ingredients</label><br/>
-                <textarea name='ingredients'></textarea ><br/>
-                <label>Method</label><br/>
-                <textarea name='method' ></textarea ><br/>
-                <label>Notes</label><br/>
-                <textarea name='notes' ></textarea ><br/>
-                <button >{recipeID === 'new'? 'Create recipe' : 'Save Changes'}</button>
-            </form>
-        )
-    }
-
+    if (!currentRecipe) { return null }
 
     //Show recipe view
     return (
-
-            <Grid container alignContent={'flex-start'} spacing={2} className={classes.root}>
-                <Grid item xs={12} className={classes.header}>
-                    <Typography variant={'h3'}>{recipe.name}</Typography>
-                    <Typography variant={'h4'}>owners name</Typography>
-                    <Divider/>
-                </Grid>
-
-            {/* <button onClick={() => setEdit(true)}>Edit</button>
-            <button onClick={() => setEdit(true)}>Duplicate</button>
-            <button onClick={() => setEdit(true)}>Delete</button>
-            <br />
-            <button onClick={() => setEdit(true)}>Share via email</button>
-            <button onClick={() => setEdit(true)}>Share via facebook</button>
-            <button onClick={() => setEdit(true)}>Share via messenger</button> */}
-            <Grid item xs={12} sm={3} md={2}>
-                <div className={classes.gridItem}>
-                    <h2>Ingredients</h2>
-                    {recipe.ingredients.map(e => <p>{e}</p>)}
-                </div>
-            </Grid>
-            <Grid item xs={12} sm={9} md={10} lg={8}>
-                <div className={classes.gridItem}>
-                    <h2>Method</h2>
-                    {recipe.method.map(e => <p>{e}</p>)}
-                </div>
-            </Grid>
-            <Grid item xs={12} lg={2} >
-                <div className={classes.gridItem}>
-                    <h2>Notes</h2>
-                    {recipe.notes}
-                </div>
-            </Grid>
-            </Grid>
-
+        <>
+        {edit ? 
+        <RecipeEditView currentRecipe={currentRecipe} setCurrentRecipe={setCurrentRecipe} setEdit={setEdit}/>
+        : <RecipeView currentRecipe={currentRecipe} setCurrentRecipe={setCurrentRecipe} setEdit={setEdit}></RecipeView>}
+        </>
     )
 }
 
