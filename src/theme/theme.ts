@@ -2,6 +2,8 @@ import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
 import shadows from './shadows'
 import overrides from './overrides'
 import palette from './palette'
+import breakpoints from './breakpoints'
+
 const themeDef = {
     shape: {
         borderRadius: 0
@@ -22,7 +24,8 @@ const themeDef = {
             fontWeight: 100
         }
     },
-    overrides
+    overrides,
+    breakpoints
 }
 
 

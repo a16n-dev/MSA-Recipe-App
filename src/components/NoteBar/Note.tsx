@@ -11,11 +11,20 @@ const useStyles = makeStyles(theme => ({
         boxSizing: 'border-box',
         userSelect: 'none',
         background: 'white',
-        minHeight: '50px',
+        minHeight: 'fit-content',
         marginBottom: theme.spacing(2),
         padding: theme.spacing(2),
         border: '1px solid grey',
-        borderRadius: '4px'
+        borderRadius: '4px',
+        [theme.breakpoints.down('md')]: {
+            width: '30%',
+            marginBottom: 'auto',
+            marginRight: theme.spacing(2),
+        },
+        [theme.breakpoints.down('xs')]: {
+            width: '100%',
+            marginBottom: theme.spacing(2)
+        }
     },
     dragHandle: {
         width: '40px',

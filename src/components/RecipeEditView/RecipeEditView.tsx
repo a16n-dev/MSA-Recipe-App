@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react'
-import { makeStyles, Typography, Divider, Grid, Button } from '@material-ui/core';
+import { makeStyles, Typography, Divider, Grid, Button, Hidden, Input } from '@material-ui/core';
 import EditIngredientForm from '../EditIngredientForm/EditIngredientForm';
 import EditMethodForm from '../EditMethodForm/EditMethodForm';
 import EditTitleForm from '../EditTitleForm/EditTitleForm';
@@ -25,52 +25,109 @@ const useStyles = makeStyles(theme => ({
         gridTemplateRows: 'min-content auto',
         width: '90%',
         margin: '0 5%',
-        padding: theme.spacing(2),
+        padding: theme.spacing(4),
+        [theme.breakpoints.down('xs')]: {
+            textAlign: 'center',
+            position: 'static',
+            top: 'auto',
+            bottom: 'auto',
+        },
     },
     detailContainer: {
         minHeight: 0,
+        [theme.breakpoints.down('xs')]: {
+            alignItems: 'stretch',
+            flexDirection: 'column'
+        },
+    },
+    divider: {
+        [theme.breakpoints.down('xs')]: {
+            alignItems: 'stretch',
+            flexDirection: 'column'
+        },
+        marginBottom: '20px'
     },
     header: {
         display: 'grid',
         columnGap: theme.spacing(2),
         gridTemplateRows: 'auto auto',
-        gridTemplateColumns: '160px auto auto',
+        gridTemplateColumns: 'min-content auto auto',
         height: '160px',
         [theme.breakpoints.down('xs')]: {
-            textAlign: 'center'
+            textAlign: 'center',
+            gridTemplateColumns: 'auto',
+            rowGap: `${theme.spacing(2)}px`,
+            height: 'min-content',
         },
         marginBottom: '20px'
     },
     gridItem: {
         padding: theme.spacing(1),
         height: '100%',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        [theme.breakpoints.down('xs')]: {
+            marginBottom: theme.spacing(4),
+            height: 'min-content',
+            textAlign: 'left',
+        },
+        [theme.breakpoints.down('md')]: {
+            height: 'min-content',
+        }
     },
     author: {
         color: '#aaa'
-    },
-    image: {
-        width: '160px',
-        height: '160px',
-        gridRow: '1 / 3'
     },
     buttonBar: {
         gridColumn: '3 / 4',
         gridRow: '1 / 2',
         display: 'flex',
         justifyContent: 'flex-end',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '4 / 5',
+            gridColumn: '1 / 2',
+            justifyContent: 'center',
+        },
     },
     titleBox: {
         gridRow: '1 / 2',
-        gridColumn: '2 / 3'
+        gridColumn: '2 / 3',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '2 / 3',
+            gridColumn: '1 / 2',
+        },
     },
     infoBox: {
+        display: 'flex',
+        flexDirection: 'column',
         gridRow: '2 / 3',
-        gridColumn: '2 / 3'
+        gridColumn: '2 / 3',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '3 / 4',
+            gridColumn: '1 / 2',
+        },
+    },
+    infoItem: {
+        display: 'flex',
+        width: '120px',
+        alignItems: 'center',
+        marginTop: '4px'
     },
     sectionHeader: {
         marginBottom: theme.spacing(3)
+    },
+    inputField: {
+        marginLeft: theme.spacing(1),
+        flexGrow: 1
+    },
+    servingInput: {
+        width: '20px',
+        marginLeft: theme.spacing(1),
+        marginRight: theme.spacing(1),
+
+        '& > input': {
+            textAlign: 'center'
+        }
     }
 
 }));
@@ -95,10 +152,15 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
     const [ingredients, setIngredients] = useState<string[]>([])
     const [method, setMethod] = useState<string[]>([])
     const [notes, setNotes] = useState<note[]>([])
+    const [prepTime, setPrepTime] = useState<string>('')
+    const [servings, setServings] = useState<string>('1')
+    
     const [error, setError] = useState({
         name: false,
         ingredients: false,
-        method: false
+        method: false,
+        prepTime: false,
+        servings: false
     })
 
 
@@ -110,6 +172,8 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
         setIngredients(currentRecipe.ingredients)
         setMethod(currentRecipe.method)
         setNotes(currentRecipe.notes)
+        setPrepTime(currentRecipe.prepTime)
+        setServings(currentRecipe.servings)
     }, [currentRecipe])
 
     const handleDiscardEdits = () => {
@@ -156,12 +220,22 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
         setError({
             name: false,
             ingredients: false,
-            method: false
+            method: false,
+            prepTime:false,
+            servings: false
         })
         //Check valid
         if (name === '') {
             setError({ ...error, name: true })
             enqueueSnackbar('Recipe name cannot be empty', { variant: 'error' })
+            return null
+        } else if (prepTime === '') {
+            setError({ ...error, prepTime: true })
+            enqueueSnackbar('Please enter a preparation time', { variant: 'error' })
+            return null
+        } else if (isNaN(+servings) || servings === '') {
+            setError({ ...error, servings: true })
+            enqueueSnackbar('Servings must be a number', { variant: 'error' })
             return null
         } else if (saveIngredients.length <= 1) {
             setError({ ...error, ingredients: true })
@@ -180,7 +254,9 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                 name,
                 ingredients: saveIngredients,
                 method: saveMethod,
-                notes
+                notes,
+                prepTime,
+                servings,
             }
         }
     }
@@ -203,14 +279,25 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
     return (
         <div className={classes.root}>
             <div className={classes.header}>
+            {isNew ?
+                ''
+            :
                 <RecipeImageForm recipeId={currentRecipe._id}/>
+            }
                 <div className={classes.titleBox}>
                     <EditTitleForm title={name} setTitle={setName} error={error.name} />
                     <Typography className={classes.author} variant={'h4'}>{currentRecipe.authorName}</Typography>
                 </div>
                 <div className={classes.infoBox}>
-                    <Typography><AccessTimeSharpIcon fontSize={'inherit'} /> Prep time</Typography>
-                    <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> Servings</Typography>
+                <div className={classes.infoItem}>
+                    <AccessTimeSharpIcon fontSize={'inherit'} />
+                    <Input error={error.prepTime} className={classes.inputField} value={prepTime} onChange={(e)=>{setPrepTime(e.target.value)}}/>
+                </div>
+                <div className={classes.infoItem}>
+                    <PeopleAltSharpIcon fontSize={'inherit'} />
+                    <Input error={error.servings} className={classes.servingInput} type={'string'} value={servings} onChange={(e)=>{setServings(e.target.value)}}/>
+                    servings
+                 </div>
                 </div>
                 <div className={classes.buttonBar}>
                     {isNew ?
@@ -246,16 +333,19 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                 </Grid>
 
                 <Grid container item xs={12} sm={9} md={10} lg={8}>
-                    <Divider orientation="vertical" flexItem />
+                <Hidden xsDown>
+                        <Divider orientation="vertical" flexItem />
+                    </Hidden>
                     <Grid item xs className={classes.gridItem}>
                         <Typography variant={'h5'} className={classes.sectionHeader}>Method</Typography>
                         <EditMethodForm method={method} setMethod={setMethod} />
                     </Grid>
-                    <Divider orientation="vertical" flexItem />
+                    <Hidden mdDown>
+                        <Divider orientation="vertical" flexItem />
+                    </Hidden>
                 </Grid>
 
                 <Grid item xs={12} lg={2} className={classes.gridItem}>
-                    <Typography variant={'h5'} className={classes.sectionHeader}>Notes</Typography>
                     <NoteBar />
                 </Grid>
 

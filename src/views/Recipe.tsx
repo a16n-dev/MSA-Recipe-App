@@ -14,13 +14,21 @@ import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        position: 'absolute',
-        top: 0,
-        bottom: 0,
         display: 'grid',
         gridTemplateRows: 'min-content auto',
         width: '100%',
         padding: theme.spacing(4),
+        [theme.breakpoints.down('xs')]: {
+            textAlign: 'center',
+            position: 'static',
+            top: 'auto',
+            bottom: 'auto',
+        },
+        [theme.breakpoints.up('sm')]: {
+            position: 'absolute',
+            top: 0,
+            bottom: 0,
+        }
     },
     detailContainer: {
         minHeight: 0,
@@ -77,7 +85,8 @@ const Recipe = (props: RecipeProps) => {
                 notes: [],
                 authorName: '',
                 prepTime: 'string',
-                servings: 1,
+                servings: '1',
+                isPublic: false
             })
             setLoading(false)
         } else {
@@ -98,7 +107,7 @@ const Recipe = (props: RecipeProps) => {
 
     const updateRecipe = (recipe: recipe) => {
 
-        const {name, ingredients, method, notes } = recipe
+        const {name, ingredients, method, notes, prepTime, servings } = recipe
 
         // Update database
         console.log(recipe);
@@ -107,7 +116,7 @@ const Recipe = (props: RecipeProps) => {
             url: `/recipe/${currentRecipe?._id}`,
             headers: {authToken: state.token},
             data: {
-                name, ingredients, method, notes
+                name, ingredients, method, notes, prepTime, servings
             }
         }).then((result) => {
             if(result.status===200){

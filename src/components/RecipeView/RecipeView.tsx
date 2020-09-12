@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles, Typography, Divider, Grid, Button, Menu, MenuItem } from '@material-ui/core';
-import EditIngredientForm from '../EditIngredientForm/EditIngredientForm';
-import EditMethodForm from '../EditMethodForm/EditMethodForm';
-import EditTitleForm from '../EditTitleForm/EditTitleForm';
+import { makeStyles, Typography, Divider, Grid, Button, Hidden, Tooltip } from '@material-ui/core';
 import NoteBar from '../NoteBar/NoteBar';
 import { recipe, note } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
@@ -10,6 +7,7 @@ import MethodList from '../MethodList/MethodList';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
 import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
 import ShareButton from '../ShareButton/ShareButton';
+import PublicIcon from '@material-ui/icons/Public';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -20,10 +18,27 @@ const useStyles = makeStyles(theme => ({
         gridTemplateRows: 'min-content auto',
         width: '90%',
         margin: '0 5%',
-        padding: theme.spacing(2),
+        padding: theme.spacing(4),
+        [theme.breakpoints.down('xs')]: {
+            textAlign: 'center',
+            position: 'static',
+            top: 'auto',
+            bottom: 'auto',
+        },
     },
     detailContainer: {
         minHeight: 0,
+        [theme.breakpoints.down('xs')]: {
+            alignItems: 'stretch',
+            flexDirection: 'column'
+        },
+    },
+    divider: {
+        [theme.breakpoints.down('xs')]: {
+            alignItems: 'stretch',
+            flexDirection: 'column'
+        },
+        marginBottom: '20px'
     },
     header: {
         display: 'grid',
@@ -32,34 +47,70 @@ const useStyles = makeStyles(theme => ({
         gridTemplateColumns: 'min-content auto auto',
         height: '160px',
         [theme.breakpoints.down('xs')]: {
-            textAlign: 'center'
+            textAlign: 'center',
+            gridTemplateColumns: 'auto',
+            rowGap: `${theme.spacing(2)}px`,
+            height: 'min-content',
         },
         marginBottom: '20px'
     },
     gridItem: {
         padding: theme.spacing(1),
         height: '100%',
-        overflowY: 'auto'
+        overflowY: 'auto',
+        [theme.breakpoints.down('xs')]: {
+            marginBottom: theme.spacing(4),
+            height: 'min-content',
+            textAlign: 'left',
+        },
+        [theme.breakpoints.down('md')]: {
+            height: 'min-content',
+        }
     },
     image: {
+        justifySelf: 'center',
         width: '160px',
         height: '160px',
-        gridRow: '1 / 3'
+        gridRow: '1 / 3',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '1 / 2',
+        },
     },
     buttonBar: {
         gridColumn: '3 / 4',
         gridRow: '1 / 2',
         display: 'flex',
         justifyContent: 'flex-end',
-        alignItems: 'flex-end'
+        alignItems: 'flex-end',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '4 / 5',
+            gridColumn: '1 / 2',
+            justifyContent: 'center',
+        },
     },
     titleBox: {
         gridRow: '1 / 2',
-        gridColumn: '2 / 3'
+        gridColumn: '2 / 3',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '2 / 3',
+            gridColumn: '1 / 2',
+        },
     },
     infoBox: {
+        display: 'flex',
+        flexDirection: 'column',
         gridRow: '2 / 3',
-        gridColumn: '2 / 3'
+        gridColumn: '2 / 3',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '3 / 4',
+            gridColumn: '1 / 2',
+        },
+    },
+    infoItem: {
+        display: 'flex',
+        width: '120px',
+        alignItems: 'center',
+        marginTop: '4px'
     },
     sectionHeader: {
         marginBottom: theme.spacing(3)
@@ -77,7 +128,6 @@ const RecipeView = (props: RecipeViewProps) => {
     const classes = useStyles()
 
     const { currentRecipe, setCurrentRecipe, setEdit } = props
-
 
     const handleSubmitEdits = (e: any) => {
         setEdit(true)
@@ -101,16 +151,22 @@ const RecipeView = (props: RecipeViewProps) => {
                 {/* <Typography variant={'h3'}>{name}</Typography> */}
                 <img className={classes.image} alt={currentRecipe.name} src={`http://localhost:8000/recipe/${currentRecipe._id}/image`}></img>
                 <div className={classes.titleBox}>
-                    <Typography variant={'h3'}>{currentRecipe.name}</Typography>
+                    <Typography variant={'h3'}>
+                        {currentRecipe.name} {currentRecipe.isPublic? <Tooltip title="Public Recipe"><PublicIcon color={'secondary'}/></Tooltip> : ''}
+                    </Typography>
                     <Typography variant={'h5'}>{currentRecipe.authorName}</Typography>
                 </div>
                 <div className={classes.infoBox}>
-                    <Typography><AccessTimeSharpIcon fontSize={'inherit'} /> Prep time</Typography>
-                    <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> Servings</Typography>
+                    <div className={classes.infoItem}>
+                        <Typography><AccessTimeSharpIcon fontSize={'inherit'} /> {currentRecipe.prepTime}</Typography>
+                    </div>
+                    <div className={classes.infoItem}>
+    <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> {currentRecipe.servings} Serving{+currentRecipe.servings > 1 ? 's' : ''}</Typography>
+                    </div>
                 </div>
                 <div className={classes.buttonBar}>
-                    <Button onClick={()=>setEdit(true)} variant={'contained'} color={'secondary'}>Edit</Button>
-                    <ShareButton/>
+                    <Button onClick={() => setEdit(true)} variant={'contained'} color={'secondary'}>Edit</Button>
+                    <ShareButton />
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>
@@ -119,18 +175,27 @@ const RecipeView = (props: RecipeViewProps) => {
                     <IngredientList ingredients={currentRecipe.ingredients} />
                 </Grid>
 
-                <Grid item container xs={12} sm={9} md={10} lg={8} >
+                <Hidden smUp>
+                    <Divider className={classes.divider} />
+                </Hidden>
 
-                    <Divider orientation="vertical" flexItem />
+                <Grid item container xs={12} sm={9} md={10} lg={8} >
+                    <Hidden xsDown>
+                        <Divider orientation="vertical" flexItem />
+                    </Hidden>
+
                     <Grid item xs className={classes.gridItem}>
                         <Typography variant={'h5'} className={classes.sectionHeader}>Method</Typography>
                         <MethodList method={currentRecipe.method} />
                     </Grid>
-                    <Divider orientation="vertical" flexItem />
+                    <Hidden mdDown>
+                        <Divider orientation="vertical" flexItem />
+                    </Hidden>
                 </Grid>
-
-                <Grid item xs={12} lg={2} className={classes.gridItem}>
-                    <Typography variant={'h5'} className={classes.sectionHeader}>Notes</Typography>
+                <Hidden lgUp>
+                    <Divider className={classes.divider} />
+                </Hidden>
+                <Grid container item xs={12} lg={2} direction={'column'} className={classes.gridItem}>
                     <NoteBar />
                 </Grid>
             </Grid>

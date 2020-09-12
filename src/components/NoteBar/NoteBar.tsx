@@ -1,15 +1,31 @@
 import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
 import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, Button, Dialog, DialogContent, TextareaAutosize } from '@material-ui/core';
+import { makeStyles, Button, Dialog, DialogContent, TextareaAutosize, Typography, Tooltip } from '@material-ui/core';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Note from './Note';
 import { note } from '../../types';
 import { v4 as uuidv4 } from 'uuid';
 import NoteDialog from './NoteDialog';
+import AddSharpIcon from '@material-ui/icons/AddSharp';
 const useStyles = makeStyles(theme => ({
     root: {
+        display: 'flex',
+        flexDirection: 'column',
         width: '100%',
         // background: 'blue',
+        [theme.breakpoints.down('md')]: {
+            alignContent: 'stretch',
+            flexWrap: 'wrap'
+        },
+        [theme.breakpoints.down('xs')]: {
+            flexDirection: 'column',
+            height: 'min-content',
+        }
+    },
+    tileBar: {
+        display: 'flex',
+        justifyContent: 'space-between',
+        marginBottom: theme.spacing(3)
     }
 }));
 
@@ -78,13 +94,19 @@ const NoteBar = (props: NoteBarProps) => {
         <>
             <NoteDialog notes={listItems} index={selectedNote} open={dialog} setOpen={setDialog} setNotes={setListItems}/>
             <DragDropContext onDragEnd={onDragEnd}>
-                <Button onClick={addNote}>Add new note</Button>
+                <div className={classes.tileBar}>
+                <Typography variant={'h5'} >Notes</Typography>
+                <Tooltip title="Create new note">
+                <Button onClick={addNote} variant={'contained'} color={'secondary'}><AddSharpIcon/></Button>
+                </Tooltip>
+                </div>
+
                 <Droppable droppableId="droppable" >
                     {(provided, snapshot) => (
                         <div
                             {...provided.droppableProps}
                             ref={provided.innerRef}
-                            style={{ height: `${listItems.length * 40}px` }}
+                            style={{ minHeight: `${listItems.length * 40}px` }}
                             className={classes.root}
                         >
                             {listItems.map((e, i) => (<Note value={e} index={i} edit={() => editNote(i)}/>))}

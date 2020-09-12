@@ -2,11 +2,12 @@ export type recipe = {
     _id: string
     name: string
     prepTime: string
-    servings: number
+    servings: string
     ingredients: string[]
     method: string[]
     notes: note[],
     authorName: string
+    isPublic: boolean
 }
 
 export type user = {

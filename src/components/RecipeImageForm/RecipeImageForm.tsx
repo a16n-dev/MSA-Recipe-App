@@ -8,10 +8,14 @@ import { useSnackbar } from 'notistack';
 
 const useStyles = makeStyles(theme => ({
     root: {
+        justifySelf: 'center',
         position: 'relative',
         width: '160px',
         height: '160px',
-        gridRow: '1 / 3'
+        gridRow: '1 / 3',
+        [theme.breakpoints.down('xs')]: {
+            gridRow: '1 / 2',
+        },
     },
     image: {
         width: '100%',
