@@ -71,6 +71,29 @@ export default {
             boxShadow: theme.shadows['2']
         }
     },
+    MuiFilledInput:{
+        root: {
+            backgroundColor: palette.secondary.main,
+            boxShadow: theme.shadows['2'],
+            '&.Mui-focused':{
+                backgroundColor: palette.secondary.light
+            },
+            '&:hover':{
+                backgroundColor: palette.secondary.light
+            },
+            '&:focus':{
+                backgroundColor: palette.secondary.main
+            },
+        },
+        underline: {
+            '&::before': {
+                display: 'none'
+            },
+            '&::after': {
+                display: 'none'
+            }
+        }
+    },
     MuiSelect: {
         root: {
             // '&:focus':{
@@ -78,12 +101,9 @@ export default {
             // }
         },
         filled: {
-            boxShadow: theme.shadows['2'],
-            minWidth: 150,
             height: '36px !important',
             padding: theme.spacing(1),
             boxSizing: 'border-box' as 'border-box',
-            background: palette.secondary.main,
             color: palette.background.default,
             '&:hover':{
                 backgroundColor: palette.secondary.light
@@ -91,6 +111,7 @@ export default {
             '&:focus':{
                 backgroundColor: palette.secondary.main
             },
+
         },
         iconFilled: {
             color: palette.background.default

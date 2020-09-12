@@ -11,6 +11,7 @@ import ArrowDropDownSharpIcon from '@material-ui/icons/ArrowDropDownSharp';
 import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 import Spacer from '../components/Spacer';
 import { sortByName, sortByModified, sortByCreated } from '../util/recipeSorting';
+import PaginationControls from '../components/PaginationControls.tsx/PaginationControls';
 enum Sort {
     name,
     modified,
@@ -22,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         width: '90%',
         margin: '0 5%',
         display: 'grid',
-        gridTemplateRows: 'minmax(0, min-content) minmax(0, min-content) auto minmax(0, min-content)',
+        gridTemplateRows: 'minmax(0, min-content) auto minmax(0, min-content)',
         padding: theme.spacing(3),
         rowGap: `${theme.spacing(2)}px`,
         position: 'absolute',
@@ -44,7 +45,7 @@ const useStyles = makeStyles(theme => ({
         }
     },
     resultsContainer: {
-        overflowY: 'scroll',
+        overflowY: 'auto',
     },
     results: {
         justifyItems: 'center',
@@ -63,6 +64,11 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(1),
         marginRight: theme.spacing(1),
         lineHeight: '36px',
+    },
+    title: {
+        [theme.breakpoints.down('xs')]: {
+        marginBottom: theme.spacing(1)
+        }
     }
 }));
 
@@ -79,12 +85,12 @@ const RecipeList = (props: RecipeListProps) => {
     const [recipes, setRecipes] = useState<recipe[]>([])
     const [loading, setLoading] = useState<boolean>(true)
 
-    const [pageAmount, setPageAmount] = useState<number>(10)
     const [query, setQuery] = useState<string>('')
     const [sortedList, setSortedList] = useState<recipe[]>([])
     const [sortMethod, setSortMethod] = useState<Sort>(Sort.name)
     const [sortAsc, setSortAsc] = useState<boolean>(false)
-
+    const [startIndex, setStartIndex] = useState<number>(0)
+    const [pageAmount, setPageAmount] = useState<number>(10)
 
     useEffect(() => {
         // Fetch users recipesv
@@ -138,9 +144,34 @@ const RecipeList = (props: RecipeListProps) => {
 
     return (
         <div className={classes.root}>
-            <Typography variant={'h4'}>My Recipes</Typography>
-            <div className={classes.controlBar}>
+            
+            <div className={classes.controlBar}><Typography className={classes.title} variant={'h4'}>My Recipes</Typography>
             <Spacer expand/>
+            <div className={classes.controlGroup}>
+                <FormLabel className={classes.label}>Results per page</FormLabel>
+                <Select
+                    variant={'filled'}
+                    value={pageAmount}
+                    onChange={(event: React.ChangeEvent<{ value: unknown; }>) => { setPageAmount(event.target.value as number) }}
+                    displayEmpty
+                    inputProps={{ 'aria-label': 'Without label' }}
+                    MenuProps={{
+                        anchorOrigin: {
+                            vertical: "bottom",
+                            horizontal: "left"
+                        },
+                        transformOrigin: {
+                            vertical: "top",
+                            horizontal: "left"
+                        },
+                        getContentAnchorEl: null
+                    }}
+                >
+                    <MenuItem value={5}>5</MenuItem>
+                    <MenuItem value={10}>10</MenuItem>
+                    <MenuItem value={20}>20</MenuItem>
+                </Select>
+                </div>
             <div className={classes.controlGroup}>
                 <FormLabel className={classes.label}>Sorting</FormLabel>
                 <Select
@@ -162,8 +193,8 @@ const RecipeList = (props: RecipeListProps) => {
                     }}
                 >
                     <MenuItem value={Sort.name}>Name</MenuItem>
-                    <MenuItem value={Sort.created}>Time Created</MenuItem>
-                    <MenuItem value={Sort.modified}>Time Modified</MenuItem>
+                    <MenuItem value={Sort.created}>Date Created</MenuItem>
+                    <MenuItem value={Sort.modified}>Date Modified</MenuItem>
                 </Select>
                 <Spacer gap={1}/>
                 <Tooltip title={sortAsc ? 'Sort Descending' : 'Sort Ascending'}>
@@ -181,14 +212,16 @@ const RecipeList = (props: RecipeListProps) => {
                         return v.name.toLowerCase().includes(query)
                     }).length > 0 ? sortedList.filter((v, i) => {
                         return v.name.toLowerCase().includes(query)
-                    }).map(e => (
+                    }).splice(startIndex, pageAmount).map(e => (
                         <RecipeCard recipe={e} />
-                    )) : 'Try something esle') : 'No recipes'}
+                    )) : 'Try something else') : 'No recipes'}
                     
                 </div>
             </div>
             <div className={classes.pageControls}>
-                <Button variant={'contained'} color={'secondary'}>Test</Button>
+                <PaginationControls startIndex={startIndex} pageCount={pageAmount} setStartIndex={setStartIndex} totalCount={sortedList.filter((v, i) => {
+                        return v.name.toLowerCase().includes(query)
+                    }).length} />
             </div>
 
         </div>
