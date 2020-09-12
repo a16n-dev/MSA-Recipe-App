@@ -1,6 +1,6 @@
 import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
 import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, Button, Dialog, DialogContent, TextareaAutosize, Typography, Tooltip } from '@material-ui/core';
+import { makeStyles, Button, Dialog, DialogContent, TextareaAutosize, Typography, Tooltip, IconButton } from '@material-ui/core';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Note from './Note';
 import { note } from '../../types';
@@ -97,7 +97,7 @@ const NoteBar = (props: NoteBarProps) => {
                 <div className={classes.tileBar}>
                 <Typography variant={'h5'} >Notes</Typography>
                 <Tooltip title="Create new note">
-                <Button onClick={addNote} variant={'contained'} color={'secondary'}><AddSharpIcon/></Button>
+                <IconButton onClick={addNote} size={'small'} color={'secondary'}><AddSharpIcon/></IconButton>
                 </Tooltip>
                 </div>
 

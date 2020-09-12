@@ -16,6 +16,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('xs')]: {
             gridRow: '1 / 2',
         },
+        boxShadow: theme.shadows['2']
     },
     image: {
         width: '100%',

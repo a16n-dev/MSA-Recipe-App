@@ -270,7 +270,6 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                 ...currentRecipe,
                 ...res
             })
-            setEdit(false)
         }
        
     }
@@ -286,7 +285,6 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
             }
                 <div className={classes.titleBox}>
                     <EditTitleForm title={name} setTitle={setName} error={error.name} />
-                    <Typography className={classes.author} variant={'h4'}>{currentRecipe.authorName}</Typography>
                 </div>
                 <div className={classes.infoBox}>
                 <div className={classes.infoItem}>

@@ -12,42 +12,6 @@ import RecipeView from '../components/RecipeView/RecipeView';
 import Loading from '../components/Loading/Loading';
 import { useSnackbar } from 'notistack';
 
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'grid',
-        gridTemplateRows: 'min-content auto',
-        width: '100%',
-        padding: theme.spacing(4),
-        [theme.breakpoints.down('xs')]: {
-            textAlign: 'center',
-            position: 'static',
-            top: 'auto',
-            bottom: 'auto',
-        },
-        [theme.breakpoints.up('sm')]: {
-            position: 'absolute',
-            top: 0,
-            bottom: 0,
-        }
-    },
-    detailContainer: {
-        minHeight: 0,
-    },
-    header: {
-        height: '100px',
-        [theme.breakpoints.down('xs')]: {
-            textAlign: 'center'
-        }
-    },
-    gridItem: {
-        padding: theme.spacing(1),
-        border: '1px solid #ddd',
-        borderRadius: '5px',
-        height: '100%',
-        overflowY: 'auto'  
-    }
-}));
-
 interface RecipeProps {
     match: {
         params: {
@@ -57,20 +21,13 @@ interface RecipeProps {
 }
 
 const Recipe = (props: RecipeProps) => {
-    const classes = useStyles()
-
     const { state } = useContext(AuthContext)
-
     const { enqueueSnackbar } = useSnackbar();
-
-    // If edit mode is active
     const [edit, setEdit] = useState<boolean>(false)
     const [currentRecipe, setCurrentRecipe] = useState<recipe | undefined>(undefined)
     const [loading, setLoading] = useState(true)
 
     const recipeID = props.match.params.id
-
-    //if id is 'new' it means creating a new recipe
 
     // Fetch recipe. 
     useEffect(() => {
@@ -84,8 +41,8 @@ const Recipe = (props: RecipeProps) => {
                 method: [],
                 notes: [],
                 authorName: '',
-                prepTime: 'string',
-                servings: '1',
+                prepTime: '',
+                servings: '',
                 isPublic: false
             })
             setLoading(false)
@@ -110,7 +67,6 @@ const Recipe = (props: RecipeProps) => {
         const {name, ingredients, method, notes, prepTime, servings } = recipe
 
         // Update database
-        console.log(recipe);
         Axios({
             method: 'patch',
             url: `/recipe/${currentRecipe?._id}`,
@@ -125,6 +81,8 @@ const Recipe = (props: RecipeProps) => {
             }
         }).catch((err) => {
             
+        }).finally(()=>{
+            setEdit(false)
         });
     }
 

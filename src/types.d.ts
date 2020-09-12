@@ -8,6 +8,8 @@ export type recipe = {
     notes: note[],
     authorName: string
     isPublic: boolean
+    createdAt?: string
+    updatedAt?: string
 }
 
 export type user = {

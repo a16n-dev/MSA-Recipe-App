@@ -8,6 +8,7 @@ const useStyles = makeStyles(theme => ({
         lineHeight: theme.typography.h3.lineHeight,
         fontWeight: theme.typography.h3.fontWeight,
         letterSpacing: theme.typography.h3.letterSpacing,
+        width: '100%'
         // background: 'blue',
     }
 }));

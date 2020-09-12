@@ -8,7 +8,7 @@ const themeDef = {
     shape: {
         borderRadius: 0
     },
-    shadows,
+    // shadows,
     palette,
     typography: {
         button: {

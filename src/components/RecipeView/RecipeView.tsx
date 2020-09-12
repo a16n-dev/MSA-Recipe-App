@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles, Typography, Divider, Grid, Button, Hidden, Tooltip } from '@material-ui/core';
+import { makeStyles, Typography, Divider, Grid, Button, Hidden, Tooltip, IconButton } from '@material-ui/core';
 import NoteBar from '../NoteBar/NoteBar';
 import { recipe, note } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
@@ -8,6 +8,8 @@ import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
 import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
 import ShareButton from '../ShareButton/ShareButton';
 import PublicIcon from '@material-ui/icons/Public';
+import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
+import { useHistory } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -75,6 +77,7 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('xs')]: {
             gridRow: '1 / 2',
         },
+        boxShadow: theme.shadows['2']
     },
     buttonBar: {
         gridColumn: '3 / 4',
@@ -101,6 +104,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         gridRow: '2 / 3',
         gridColumn: '2 / 3',
+        alignItems: 'stretch',
         [theme.breakpoints.down('xs')]: {
             gridRow: '3 / 4',
             gridColumn: '1 / 2',
@@ -109,11 +113,24 @@ const useStyles = makeStyles(theme => ({
     infoItem: {
         display: 'flex',
         width: '120px',
-        alignItems: 'center',
+        [theme.breakpoints.down('xs')]: {
+            width: 'auto',
+            alignItems: 'center',
+            justifyContent: 'center',
+        },
+
         marginTop: '4px'
     },
     sectionHeader: {
         marginBottom: theme.spacing(3)
+    },
+    backButton: {
+        position: 'absolute',
+        top: theme.spacing(4),
+        left: -32,
+        [theme.breakpoints.down('xs')]: {
+            left: 16
+        },
     }
 
 }));
@@ -128,7 +145,7 @@ const RecipeView = (props: RecipeViewProps) => {
     const classes = useStyles()
 
     const { currentRecipe, setCurrentRecipe, setEdit } = props
-
+    const history = useHistory()
     const handleSubmitEdits = (e: any) => {
         setEdit(true)
         e.preventDefault()
@@ -147,6 +164,9 @@ const RecipeView = (props: RecipeViewProps) => {
     //Show recipe view
     return (
         <div className={classes.root}>
+            <Tooltip title="Back">
+                <IconButton color={'secondary'} className={classes.backButton} onClick={()=>history.push('/recipes')}><ArrowBackSharpIcon/></IconButton>
+            </Tooltip>
             <div className={classes.header}>
                 {/* <Typography variant={'h3'}>{name}</Typography> */}
                 <img className={classes.image} alt={currentRecipe.name} src={`http://localhost:8000/recipe/${currentRecipe._id}/image`}></img>

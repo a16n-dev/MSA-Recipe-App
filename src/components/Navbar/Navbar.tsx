@@ -2,16 +2,40 @@ import React, { useContext, MouseEvent, Fragment, useState } from 'react'
 import { AuthContext } from '../../context/Authcontext';
 import { auth } from '../../util/firebase';
 import { useHistory } from 'react-router-dom';
-import { AppBar, Toolbar, Button, Typography, Avatar, IconButton, Hidden, Drawer } from '@material-ui/core'
+import { AppBar, Toolbar, Typography, Avatar, IconButton, Hidden, Drawer, List, ListItem, Divider } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+import NavLink from '../NavLink/NavLink';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
-        zIndex: 3000
+        zIndex: 3000,
+
+    },
+    toolbar: {
+        [theme.breakpoints.down('xs')]: {
+            paddingLeft: 0
+        }
+    },
+    logo: {
+        marginRight: theme.spacing(2)
+    },
+    avatar: {
+        marginLeft: theme.spacing(2)
     },
     leftButtonGroup: {
         flexGrow: 1
+    },
+    divider: {
+        backgroundColor: theme.palette.grey['700']
+    },
+    icon: {
+        color: theme.palette.background.default,
+    },
+    spacer: {
+        backgroundColor: theme.palette.grey['700'],
+        marginBottom: theme.spacing(8)
     }
 }));
 
@@ -58,30 +82,37 @@ const Navbar = (props: NavbarProps) => {
         navContent = (
             <Hidden xsDown>
                 <div className={classes.leftButtonGroup}>
-                <Button variant={'text'} onClick={redirectHome}>Home</Button>
-                <Button variant={'text'} onClick={redirectRecipeList}>My Recipes</Button>
-                <Button variant={'text'} onClick={redirectNewRecipe}>Create New Recipe</Button>
+                    <NavLink onClick={redirectHome}>Home</NavLink>
+                    <NavLink onClick={redirectRecipeList}>My Recipes</NavLink>
+                    <NavLink onClick={redirectNewRecipe}>Create New Recipe</NavLink>
                 </div>
-                <Button variant={'text'}>My Profile</Button>
-                <Button variant={'outlined'} onClick={handleLogout}>Logout</Button>
+                <NavLink >My Profile</NavLink>
+                <NavLink variant={'outlined'} onClick={handleLogout}>Logout</NavLink>
 
-                <Avatar src={state.user.photoUrl}></Avatar>
+                <Avatar className={classes.avatar} src={state.user.photoUrl}></Avatar>
                 </Hidden>
         )
     } else {
         // Buttons to show to unauthenticated user
+        navContent = (
+            <Hidden xsDown>
+                <div className={classes.leftButtonGroup}></div>
+                <NavLink variant={'outlined'} onClick={redirectHome}>Login</NavLink>
+                <Avatar className={classes.avatar} src={state.user? state.user.photoUrl: '' }></Avatar>
+            </Hidden>
+        )
     }
 
     return (
         <Fragment>
         <AppBar position="static" className={classes.root} color={'secondary'}>
-            <Toolbar>
+            <Toolbar className={classes.toolbar}>
                 <Hidden smUp>
-                <IconButton onClick={()=>setDrawer(!drawer)}>
-                    <MenuIcon/>
+                <IconButton className={classes.icon} onClick={()=>setDrawer(!drawer)}>
+                    {drawer? <MenuOpenIcon/> : <MenuIcon />}
                 </IconButton>
                 </Hidden>
-                <Typography variant="h6">
+                <Typography variant="h6" className={classes.logo}>
                     Recipe App
                 </Typography>
                 {navContent}
@@ -89,7 +120,7 @@ const Navbar = (props: NavbarProps) => {
         </AppBar>
         <Hidden smUp>
         <Drawer 
-      open={drawer}
+        open={drawer}
         anchor={"top"}
         PaperProps={{ style: { position: 'absolute', bottom: '0' } }}
         BackdropProps={{ style: { position: 'absolute' } }}
@@ -98,7 +129,25 @@ const Navbar = (props: NavbarProps) => {
           style: { position: 'absolute' }
         }}
         >
-            {navContent}
+            <List>
+            {state.user?
+            <>
+                <Divider className={classes.divider} />
+                    <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink onClick={redirectHome}>Home</NavLink></ListItem>
+                    <ListItem button={true} onClick={() => {redirectRecipeList(); setDrawer(false)}}><NavLink onClick={redirectRecipeList}>My Recipes</NavLink></ListItem>
+                    <ListItem button={true} onClick={() => {redirectNewRecipe(); setDrawer(false)}}><NavLink onClick={redirectNewRecipe}>Create New Recipe</NavLink></ListItem>
+                    <Divider className={classes.spacer} />
+                    <ListItem button={true}><Avatar  src={state.user? state.user.photoUrl: '' }></Avatar></ListItem>
+                    <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink >My Profile</NavLink></ListItem>
+                    <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink variant={'outlined'} onClick={handleLogout}>Logout</NavLink></ListItem>
+            </>: 
+            <>
+            <Divider className={classes.spacer} />
+            <ListItem button={true}><Avatar  src={state.user? state.user.photoUrl: '' }></Avatar></ListItem>
+            <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink variant={'outlined'} onClick={redirectHome}>Login</NavLink></ListItem>
+            </>}
+                
+            </List>
           </Drawer>
           </Hidden>
         </Fragment>

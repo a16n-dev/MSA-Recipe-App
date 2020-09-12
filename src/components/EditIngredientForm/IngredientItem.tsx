@@ -53,7 +53,7 @@ const IngredientItem = (props: IngredientItemProps) => {
                     </div>
                     <input className={classes.input} value={value} placeholder={'new ingredient'} onChange={(e: ChangeEvent<HTMLInputElement>) => {onChange(e, index)}}></input>
                     {hover && value !== '' ? <IconButton onClick={()=>{deleteItem(index)}}>
-                        <CloseIcon/>
+                        <CloseIcon color={'secondary'}/>
                     </IconButton> : ''}
                 </div>
             )}
