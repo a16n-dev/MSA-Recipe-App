@@ -138,10 +138,6 @@ const RecipeList = (props: RecipeListProps) => {
         return (<Loading />)
     }
 
-    if (recipes.length === 0) {
-        return (<h1>No recipes found</h1>)
-    }
-
     return (
         <div className={classes.root}>
             

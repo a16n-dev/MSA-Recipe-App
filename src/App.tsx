@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import Home from './views/Home';
-import { Switch } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import Dashboard from './views/Dashboard';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import Navbar from './components/Navbar/Navbar';
@@ -12,6 +12,8 @@ import { auth } from './util/firebase';
 import axios from 'axios';
 import { AuthContext } from './context/Authcontext';
 import { Types } from './context/auth';
+import Profile from './views/Profile';
+import Settings from './views/Settings';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -49,28 +51,29 @@ const App = () => {
               console.log('error!');
           });
           
-        dispatch({
-            type: Types.Login,
-            payload: {
-                email: user.email,
-                token: idTokenResult.token,
-                photoUrl: user.photoURL,
-                name: user.displayName
-            }
-        });
+        // dispatch({
+        //     type: Types.Login,
+        //     payload: {
+        //         email: user.email,
+        //         token: idTokenResult.token,
+        //         photoUrl: user.photoURL,
+        //         name: user.displayName
+        //     }
+        // });
     }
 })
 
   return (
     <div className={classes.root}>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className={classes.pageContainer} id={'page-container'}>
       
       <Switch>
         <PrivateRoute exact path={'/dashboard'} component={Dashboard}/>
+        <PrivateRoute exact path={'/settings'} component={Settings}/>
         <PrivateRoute exact path={'/recipes'} component={RecipeList}/>
         <PrivateRoute exact path={'/recipes/:id'} component={Recipe}/>
-        <PrivateRoute exact path={'/user/:id'} component={Recipe}/>
+        <Route exact path={'/user/:id'} component={Profile}/>
         <PublicRoute path={'/'} component={Home}/>
       </Switch>
       </div>

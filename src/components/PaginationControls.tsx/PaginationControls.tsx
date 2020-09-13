@@ -46,7 +46,7 @@ const PaginationControls = (props: PaginationControlsProps) => {
         }
         return (
             <Typography>
-                Showing results {start} - {end} of {totalCount}
+                Showing results {totalCount === 0 ? 0 : start} - {end} of {totalCount}
             </Typography>
         )
     }

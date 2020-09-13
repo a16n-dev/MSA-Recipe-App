@@ -1,11 +1,15 @@
 import React, { useContext } from 'react'
 import { auth, googleAuthProvider, facebookAuthProvider, microsoftAuthProvider } from '../util/firebase';
 import { AuthContext } from '../context/Authcontext';
-import {Types } from '../context/auth'
+import { Types } from '../context/auth'
 import axios from 'axios'
-import { makeStyles, Grid, Card, CardContent, Typography } from '@material-ui/core';
+import { makeStyles, Grid, Card, CardContent, Typography, CardHeader, Divider, Button } from '@material-ui/core';
 import { FacebookLoginButton, GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
 import bgImg from '../resource/img/background.jpg'
+import Logo from '../components/Logo/Logo';
+import GoogleLogin from '../components/SocialButton/GoogleLogin';
+import FacebookLogin from '../components/SocialButton/FacebookLogin';
+import MicrosoftLogin from '../components/SocialButton/MicrosoftLogin';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -14,7 +18,10 @@ const useStyles = makeStyles(theme => ({
         height: '100%',
         paddingTop: '10%',
         paddingLeft: '10%',
-        paddingRight: '10%',
+        paddingRight: '15%',
+        [theme.breakpoints.down('sm')]: {
+            paddingRight: '10%',
+        }
     },
     backgroundImage: {
         position: 'absolute',
@@ -25,8 +32,13 @@ const useStyles = makeStyles(theme => ({
         zIndex: -100,
         background: `url(${bgImg})`,
         backgroundSize: 'cover',
+        backgroundPosition: 'center',
         filter: 'brightness(0.4)',
-        transform: 'scale(1.1)'
+        transform: 'scale(1.1)',
+        [theme.breakpoints.down('sm')]: {
+            // backgroundPosition: '40% 20%',
+            transform: 'scaleY(-1)'
+        }
     },
     titleBox: {
         color: 'white',
@@ -34,6 +46,20 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('sm')]: {
             maxWidth: 'initial',
         }
+    },
+    logo: {
+        marginBottom: theme.spacing(4),
+        height: '100px',
+        [theme.breakpoints.down('sm')]: {
+            height: 'initial',
+            width: '100%',
+            marginTop: theme.spacing(6)
+        }
+    },
+    socialBox: {
+        marginTop: theme.spacing(8),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
     }
 }));
 
@@ -44,37 +70,37 @@ interface homeProps {
 const Home = (props: homeProps) => {
     const classes = useStyles()
 
-    const { dispatch } = useContext(AuthContext)
 
-    const handleGoogleLogin = async () => {
-        auth.signInWithRedirect(googleAuthProvider)
-    }
-
-    const handleFacebookLogin = async () => {
-        auth.signInWithRedirect(facebookAuthProvider);
-    }
-
-    const handleMicrosoftLogin = async () => {
-        auth.signInWithRedirect(microsoftAuthProvider);
-    }
 
     return (
         <Grid container className={classes.root} alignItems='flex-start' justify='space-around'>
             <div className={classes.backgroundImage}></div>
-            <Grid item xs={12} md={8}>
+            <Grid item xs={12} md={9}>
                 <div className={classes.titleBox}>
-                <Typography variant='h2'><b>Recipe app</b></Typography>
-                <Typography variant='body1'>Create and share your favourite recipes. more placeholder text and stuff</Typography>
+                    <div className={classes.logo}>
+                        <Logo />
+                    </div>
+
+                    <Typography variant='body1'>Create and share your favourite recipes. more placeholder text and stuff</Typography>
                 </div>
             </Grid>
-            <Grid item  xs={12} md={4}>
-                <Card>
+            <Grid item xs={12} md={3}>
+                <Card className={classes.socialBox}>
+                    <CardHeader title={'Login'} ></CardHeader>
+                    <Divider />
                     <CardContent>
                         <Grid container direction='column' spacing={2}>
-                        <Typography>Get started today - completely free!</Typography>
-                        <GoogleLoginButton onClick={handleGoogleLogin}>Sign in with Google</GoogleLoginButton><br/>
-                        <FacebookLoginButton onClick={handleFacebookLogin}>Sign in with Facebook</FacebookLoginButton><br/>
-                        <MicrosoftLoginButton onClick={handleMicrosoftLogin}>Sign in with Microsoft</MicrosoftLoginButton><br/>
+                            <Grid item>
+                                <GoogleLogin/>
+                            </Grid>
+                            {/* <Divider /> */}
+                            <Grid item>
+                            <FacebookLogin/>
+                            </Grid>
+                            {/* <Divider /> */}
+                            <Grid item>
+                            <MicrosoftLogin/>
+                            </Grid>
                         </Grid>
                     </CardContent>
                 </Card>

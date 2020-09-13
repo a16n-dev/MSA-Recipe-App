@@ -11,6 +11,7 @@ import RecipeEditView from '../components/RecipeEditView/RecipeEditView';
 import RecipeView from '../components/RecipeView/RecipeView';
 import Loading from '../components/Loading/Loading';
 import { useSnackbar } from 'notistack';
+import { Types } from '../context/auth';
 
 interface RecipeProps {
     match: {
@@ -21,11 +22,23 @@ interface RecipeProps {
 }
 
 const Recipe = (props: RecipeProps) => {
-    const { state } = useContext(AuthContext)
+    const { state, dispatch } = useContext(AuthContext)
     const { enqueueSnackbar } = useSnackbar();
     const [edit, setEdit] = useState<boolean>(false)
     const [currentRecipe, setCurrentRecipe] = useState<recipe | undefined>(undefined)
     const [loading, setLoading] = useState(true)
+
+    useEffect(()=>{
+        if(edit){
+            dispatch({
+                type: Types.Stay
+            })
+        } else {
+            dispatch({
+                type: Types.DontStay
+            })
+        }
+    },[dispatch, edit])
 
     const recipeID = props.match.params.id
 

@@ -2,12 +2,14 @@ import React, {useReducer, createContext, useEffect} from 'react'
 import {auth} from '../util/firebase'
 import {authReducer} from './reducers'
 import {Types, InitialStateType, AuthProviderProps} from './auth'
+import Axios from 'axios'
 
 
 const initialState = {
     user: null,
     token: '',
-    loading: true
+    loading: true,
+    stay: false,
   }
 
 // Create context
@@ -32,17 +34,42 @@ const AuthProvider = ({children} : AuthProviderProps) => {
                 // If there is a logged in user
                 const idTokenResult = await user.getIdTokenResult() 
                 console.log(idTokenResult.token);
-                dispatch({
-                    type: Types.Login,
-                    payload: {
-                        user: {
-                            email: user.email,
-                            photoUrl: user.photoURL,
-                            name: user.displayName
-                        },
-                        token: idTokenResult.token,
+
+                const data = localStorage.getItem('user')
+                if(!data){
+                    console.log('no user in storage, making API call...');
+                    //request here
+                    Axios({
+                        method: 'get',
+                        url: '/user',
+                        headers: {authToken: idTokenResult.token}
+                    }).then((result) => {
+                        console.log('user:');
+                        console.log(result);
+                        localStorage.setItem('user',JSON.stringify(result.data))
+                        dispatch({
+                            type: Types.Login,
+                            payload: {
+                                token: idTokenResult.token,
+                                user: result.data
+                            }
+                        })
+                    }).catch((err) => {
+                        
+                    });
+                 } else {
+                        console.log('retreiving data from local storage');
+                        const user = JSON.parse(data)
+                        dispatch({
+                            type: Types.Login,
+                            payload: {
+                                token: idTokenResult.token,
+                                user: user
+                            }
+                        })
                     }
-                })
+
+
             } else {
                 // If there is no logged in user
                 dispatch({

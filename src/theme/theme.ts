@@ -5,6 +5,7 @@ import palette from './palette'
 import breakpoints from './breakpoints'
 
 const themeDef = {
+    type: 'dark',
     shape: {
         borderRadius: 0
     },

@@ -13,9 +13,9 @@ export type recipe = {
 }
 
 export type user = {
-    name: String
-    photoUrl: String
-    email: String
+    name: string
+    profileUrl: string
+    email: string
 }
 
 export type note = {
