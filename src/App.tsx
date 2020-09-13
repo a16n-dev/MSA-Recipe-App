@@ -65,7 +65,7 @@ const App = () => {
 
   return (
     <div className={classes.root}>
-      {/* <Navbar /> */}
+      <Navbar />
       <div className={classes.pageContainer} id={'page-container'}>
       
       <Switch>

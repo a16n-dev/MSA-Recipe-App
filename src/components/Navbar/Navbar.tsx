@@ -134,13 +134,14 @@ const Navbar = (props: NavbarProps) => {
         )
     } else {
         // Buttons to show to unauthenticated user
-        navContent = (
-            <Hidden xsDown>
-                <div className={classes.leftButtonGroup}></div>
-                <NavLink variant={'outlined'} onClick={redirectHome}>Login</NavLink>
-                <Avatar className={classes.avatar} src={state.user? state.user.profileUrl: '' }></Avatar>
-            </Hidden>
-        )
+        return (<></>)
+        // navContent = (
+        //     <Hidden xsDown>
+        //         <div className={classes.leftButtonGroup}></div>
+        //         <NavLink variant={'outlined'} onClick={redirectHome}>Login</NavLink>
+        //         <Avatar className={classes.avatar} src={state.user? state.user.profileUrl: '' }></Avatar>
+        //     </Hidden>
+        // )
     }
 
     return (
