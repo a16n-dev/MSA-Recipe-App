@@ -54,7 +54,7 @@ const ShareButton = (props: ShareButtonProps) => {
 
   const handleGetShareableLink = () => {
     handleClose()
-    TinyURL.shorten(`http://${window.location.host}/explore/recipes/${currentRecipe._id}`).then(function (res: any) {
+    TinyURL.shorten(`http://braize.azurewebsites.net/explore/recipes/${currentRecipe._id}`).then(function (res: any) {
       console.log(res)
     }, function (err: any) {
       console.log(err)
@@ -68,7 +68,7 @@ const ShareButton = (props: ShareButtonProps) => {
 
     (window as any).FB.ui({
       method: 'share',
-      href: `http://braize.azurewebsites.net/recipes/explore/${currentRecipe._id}`
+      href: `http://braize.azurewebsites.net/explore/recipes/${currentRecipe._id}`
     }, function (response: any) { });
   }
 
