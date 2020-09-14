@@ -16,10 +16,8 @@ trigger:
     displayName: 'Install Node.js'
   
   - script: |
-      cd $(rootDir)
       npm install
       npm run build
-      cd ..
     displayName: 'npm install and build'
   
   - task: ArchiveFiles@2
