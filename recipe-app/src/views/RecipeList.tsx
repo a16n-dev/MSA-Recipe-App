@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/Authcontext';
 import { recipe } from '../types';
 import axios from 'axios'
-import { Link } from 'react-router-dom';
-import { makeStyles, Card, Grid, CardContent, Typography, Button, Select, MenuItem, IconButton, FormLabel, Tooltip } from '@material-ui/core';
+import { Link, useHistory } from 'react-router-dom';
+import { makeStyles, Card, Grid, CardContent, Typography, Button, Select, MenuItem, IconButton, FormLabel, Tooltip, Divider } from '@material-ui/core';
 import Loading from '../components/Loading/Loading';
 import RecipeCard from '../components/RecipeCard/RecipeCard';
 import SearchBar from '../components/SearchBar/SearchBar';
@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
         width: '90%',
         margin: '0 5%',
         display: 'grid',
-        gridTemplateRows: 'minmax(0, min-content) auto minmax(0, min-content)',
+        gridTemplateRows: 'minmax(0, min-content) auto minmax(0, min-content) ',
         padding: theme.spacing(3),
         rowGap: `${theme.spacing(2)}px`,
         position: 'absolute',
@@ -67,8 +67,12 @@ const useStyles = makeStyles(theme => ({
     },
     title: {
         [theme.breakpoints.down('xs')]: {
-        marginBottom: theme.spacing(1)
+            marginBottom: theme.spacing(1)
         }
+    },
+    placeholder: {
+        width: '100%',
+        height: '100%',
     }
 }));
 
@@ -81,6 +85,8 @@ const RecipeList = (props: RecipeListProps) => {
     const classes = useStyles()
 
     const { state } = useContext(AuthContext)
+    
+    const history = useHistory()
 
     const [recipes, setRecipes] = useState<recipe[]>([])
     const [loading, setLoading] = useState<boolean>(true)
@@ -109,9 +115,9 @@ const RecipeList = (props: RecipeListProps) => {
         });
     }, [state.token])
 
-    useEffect(()=>{
+    useEffect(() => {
         let arr: any;
-        switch(sortMethod){
+        switch (sortMethod) {
             case Sort.name:
                 arr = sortByName(recipes)
                 break;
@@ -127,97 +133,110 @@ const RecipeList = (props: RecipeListProps) => {
         }
 
         // Reverse order if needed
-        if(sortAsc) {
+        if (sortAsc) {
             setSortedList(arr.reverse())
         } else {
             setSortedList(arr)
         }
-    },[recipes, sortAsc, sortMethod])
+    }, [recipes, sortAsc, sortMethod])
 
     if (loading) {
         return (<Loading />)
     }
 
+    const showPlaceholder = () => (
+        <Grid container direction={'column'} justify={'center'} spacing={2} alignItems={'center'} className={classes.placeholder}>
+            <Grid item>
+                <Typography>Looks like theres nothing here yet!</Typography>
+            </Grid>
+            <Grid item>
+                <Button color={'secondary'} variant={'contained'} onClick={()=>{history.push('./recipes/new')}}>Add a Recipe</Button>
+            </Grid>
+        </Grid>
+    )
+
     return (
         <div className={classes.root}>
-            
+
             <div className={classes.controlBar}><Typography className={classes.title} variant={'h4'}>My Recipes</Typography>
-            <Spacer expand/>
-            <div className={classes.controlGroup}>
-                <FormLabel className={classes.label}>Results per page</FormLabel>
-                <Select
-                    variant={'filled'}
-                    value={pageAmount}
-                    onChange={(event: React.ChangeEvent<{ value: unknown; }>) => { setPageAmount(event.target.value as number) }}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                    MenuProps={{
-                        anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "left"
-                        },
-                        transformOrigin: {
-                            vertical: "top",
-                            horizontal: "left"
-                        },
-                        getContentAnchorEl: null
-                    }}
-                >
-                    <MenuItem value={5}>5</MenuItem>
-                    <MenuItem value={10}>10</MenuItem>
-                    <MenuItem value={20}>20</MenuItem>
-                </Select>
+                <Spacer expand />
+                <div className={classes.controlGroup}>
+                    <FormLabel className={classes.label}>Results per page</FormLabel>
+                    <Select
+                        variant={'filled'}
+                        value={pageAmount}
+                        onChange={(event: React.ChangeEvent<{ value: unknown; }>) => { setPageAmount(event.target.value as number) }}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        MenuProps={{
+                            anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: "left"
+                            },
+                            transformOrigin: {
+                                vertical: "top",
+                                horizontal: "left"
+                            },
+                            getContentAnchorEl: null
+                        }}
+                    >
+                        <MenuItem value={5}>5</MenuItem>
+                        <MenuItem value={10}>10</MenuItem>
+                        <MenuItem value={20}>20</MenuItem>
+                    </Select>
                 </div>
-            <div className={classes.controlGroup}>
-                <FormLabel className={classes.label}>Sorting</FormLabel>
-                <Select
-                    variant={'filled'}
-                    value={sortMethod}
-                    onChange={(event: React.ChangeEvent<{ value: unknown; }>) => { setSortMethod(event.target.value as Sort) }}
-                    displayEmpty
-                    inputProps={{ 'aria-label': 'Without label' }}
-                    MenuProps={{
-                        anchorOrigin: {
-                            vertical: "bottom",
-                            horizontal: "left"
-                        },
-                        transformOrigin: {
-                            vertical: "top",
-                            horizontal: "left"
-                        },
-                        getContentAnchorEl: null
-                    }}
-                >
-                    <MenuItem value={Sort.name}>Name</MenuItem>
-                    <MenuItem value={Sort.created}>Date Created</MenuItem>
-                    <MenuItem value={Sort.modified}>Date Modified</MenuItem>
-                </Select>
-                <Spacer gap={1}/>
-                <Tooltip title={sortAsc ? 'Sort Descending' : 'Sort Ascending'}>
-                    
-                <IconButton size={'small'} onClick={() => { setSortAsc(!sortAsc) }} style={{ width: '36px' }} color={'secondary'}>{sortAsc ? <ArrowDropUpSharpIcon /> : <ArrowDropDownSharpIcon />}</IconButton>
-                </Tooltip>
+                <div className={classes.controlGroup}>
+                    <FormLabel className={classes.label}>Sorting</FormLabel>
+                    <Select
+                        variant={'filled'}
+                        value={sortMethod}
+                        onChange={(event: React.ChangeEvent<{ value: unknown; }>) => { setSortMethod(event.target.value as Sort) }}
+                        displayEmpty
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        MenuProps={{
+                            anchorOrigin: {
+                                vertical: "bottom",
+                                horizontal: "left"
+                            },
+                            transformOrigin: {
+                                vertical: "top",
+                                horizontal: "left"
+                            },
+                            getContentAnchorEl: null
+                        }}
+                    >
+                        <MenuItem value={Sort.name}>Name</MenuItem>
+                        <MenuItem value={Sort.created}>Date Created</MenuItem>
+                        <MenuItem value={Sort.modified}>Date Modified</MenuItem>
+                    </Select>
+                    <Spacer gap={1} />
+                    <Tooltip title={sortAsc ? 'Sort Descending' : 'Sort Ascending'}>
+
+                        <IconButton size={'small'} onClick={() => { setSortAsc(!sortAsc) }} style={{ width: '36px' }} color={'secondary'}>{sortAsc ? <ArrowDropUpSharpIcon /> : <ArrowDropDownSharpIcon />}</IconButton>
+                    </Tooltip>
                 </div>
-                <Spacer gap={8}/>
+                <Spacer gap={8} />
                 <SearchBar query={query} setQuery={setQuery} />
             </div>
-            <div className={classes.resultsContainer}>
-                <div className={classes.results}>
-                    {sortedList.length > 0 ? (
-                    sortedList.filter((v, i) => {
-                        return v.name.toLowerCase().includes(query)
-                    }).length > 0 ? sortedList.filter((v, i) => {
-                        return v.name.toLowerCase().includes(query)
-                    }).splice(startIndex, pageAmount).map(e => (
-                        <RecipeCard recipe={e} />
-                    )) : 'Try something else') : 'No recipes'}
-                    
+            {sortedList.length === 0 ? showPlaceholder() :
+                <div className={classes.resultsContainer}>
+                    <div className={classes.results}>
+                        {sortedList.length > 0 ? (
+                            sortedList.filter((v, i) => {
+                                return v.name.toLowerCase().includes(query)
+                            }).length > 0 ? sortedList.filter((v, i) => {
+                                return v.name.toLowerCase().includes(query)
+                            }).splice(startIndex, pageAmount).map(e => (
+                                <RecipeCard recipe={e} />
+                            )) : 'Try something else') : 'No recipes'}
+
+                    </div>
                 </div>
-            </div>
+            }
             <div className={classes.pageControls}>
                 <PaginationControls startIndex={startIndex} pageCount={pageAmount} setStartIndex={setStartIndex} totalCount={sortedList.filter((v, i) => {
-                        return v.name.toLowerCase().includes(query)
-                    }).length} />
+                    return v.name.toLowerCase().includes(query)
+                }).length} />
             </div>
 
         </div>

@@ -15,5 +15,7 @@ export enum Types {
     Login = 'LOG_IN_USER',
     Clear = 'CLEAR_USER',
     Stay  = 'SET_STAY_TRUE',
-    DontStay = 'SET_STAY_FALSE'
+    DontStay = 'SET_STAY_FALSE',
+    Update = 'UPDATE',
+    Delete = 'DELETE'
 }

@@ -14,6 +14,7 @@ import Axios from 'axios';
 import { AuthContext } from '../../context/Authcontext';
 import { useHistory } from 'react-router-dom';
 import RecipeImageForm from '../RecipeImageForm/RecipeImageForm';
+import { Types } from '../../context/auth';
 
 
 const useStyles = makeStyles(theme => ({
@@ -289,7 +290,7 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                 <div className={classes.infoBox}>
                 <div className={classes.infoItem}>
                     <AccessTimeSharpIcon fontSize={'inherit'} />
-                    <Input error={error.prepTime} className={classes.inputField} value={prepTime} onChange={(e)=>{setPrepTime(e.target.value)}}/>
+                    <Input error={error.prepTime} placeholder={'prep time'} className={classes.inputField} value={prepTime} onChange={(e)=>{setPrepTime(e.target.value)}}/>
                 </div>
                 <div className={classes.infoItem}>
                     <PeopleAltSharpIcon fontSize={'inherit'} />
@@ -302,7 +303,7 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                         <>
                             <Button variant={'contained'} color={'secondary'} onClick={createNewRecipe}>Create Recipe</Button>
                             <ConfirmationButton
-                                onClick={() => { history.push('/recipes') }}
+                                onClick={() => {dispatch({type:Types.DontStay}); history.push('/recipes') }}
                                 title={'Discard new recipe?'}
                                 message={`Are you sure you want to leave without saving?`}
                                 action={'Leave'}

@@ -5,7 +5,7 @@ import {Types, InitialStateType, AuthProviderProps} from './auth'
 import Axios from 'axios'
 
 
-const initialState = {
+export const initialState = {
     user: null,
     token: '',
     loading: true,

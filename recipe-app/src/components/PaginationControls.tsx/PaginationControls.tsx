@@ -60,6 +60,7 @@ const PaginationControls = (props: PaginationControlsProps) => {
     const getButtons = () => {
         const pages = Math.ceil(totalCount / pageCount)
         console.log(`pages: ${pages}`);
+
         return (
             <div className={classes.buttonBar}>
 
@@ -91,7 +92,7 @@ const PaginationControls = (props: PaginationControlsProps) => {
     return (
         <div className={classes.root}>
             {getMessage()}
-            {getButtons()}
+            {totalCount === 0 ? '' : getButtons()}
         </div>
     )
 }

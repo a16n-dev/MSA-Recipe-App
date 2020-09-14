@@ -14,7 +14,7 @@ import { AuthContext } from './context/Authcontext';
 import { Types } from './context/auth';
 import Profile from './views/Profile';
 import Settings from './views/Settings';
-
+import PublicRecipe from './views/PublicRecipe'
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh',
@@ -46,20 +46,18 @@ const App = () => {
             console.log(res);
               if(res.status === 201){
                   console.log('successful db entry created!');
+                  localStorage.setItem('user',JSON.stringify(res.data))
+                        dispatch({
+                            type: Types.Login,
+                            payload: {
+                                token: idTokenResult.token,
+                                user: res.data
+                            }
+                        })
               }
           }).catch((err) => {
               console.log('error!');
           });
-          
-        // dispatch({
-        //     type: Types.Login,
-        //     payload: {
-        //         email: user.email,
-        //         token: idTokenResult.token,
-        //         photoUrl: user.photoURL,
-        //         name: user.displayName
-        //     }
-        // });
     }
 })
 
@@ -74,6 +72,7 @@ const App = () => {
         <PrivateRoute exact path={'/recipes'} component={RecipeList}/>
         <PrivateRoute exact path={'/recipes/:id'} component={Recipe}/>
         <Route exact path={'/user/:id'} component={Profile}/>
+        <Route exact path={'/explore/recipes/:id'} component={PublicRecipe}/>
         <PublicRoute path={'/'} component={Home}/>
       </Switch>
       </div>
