@@ -1,29 +1,7 @@
-import React, { useContext, useState, ChangeEvent } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, IconButton, TextareaAutosize, Typography, Button, Dialog, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
-import { Draggable } from 'react-beautiful-dnd'
-import CloseIcon from '@material-ui/icons/Close';
-import { note } from '../../types';
-const useStyles = makeStyles(theme => ({
-    root: {
-        display: 'flex',
-        flexDirection: 'column',
-        boxSizing: 'border-box',
-        userSelect: 'none',
-        background: 'white',
-        minHeight: '50px',
-        marginBottom: theme.spacing(2),
-        padding: theme.spacing(2),
-        border: '1px solid grey',
-        borderRadius: '4px'
-    },
-    dragHandle: {
-        width: '40px',
-        padding: '8px',
-        // background: 'black',
-    }
+import React, { useState } from 'react'
 
-}));
+import { Button, Dialog, DialogContent, DialogActions, DialogTitle } from '@material-ui/core';
+
 
 interface ConfirmationButtonProps {
     children: React.ReactNode
@@ -34,8 +12,6 @@ interface ConfirmationButtonProps {
 }
 
 const ConfirmationButton = (props: ConfirmationButtonProps) => {
-
-    const classes = useStyles()
 
     const [open, setOpen] = useState<boolean>(false)
 

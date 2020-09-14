@@ -1,9 +1,7 @@
 import React, { useState, ChangeEvent, useEffect } from 'react'
 
-import { makeStyles, Typography, Dialog, DialogContent, TextareaAutosize, Button, DialogActions, DialogTitle } from '@material-ui/core';
-import clsx from 'clsx'
+import { makeStyles, Dialog, DialogContent, TextareaAutosize, Button, DialogActions } from '@material-ui/core';
 import { note } from '../../types';
-import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(theme => ({
     root: {

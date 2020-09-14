@@ -1,5 +1,4 @@
-import React, { useContext, useState, ChangeEvent, FormEvent, useRef, useEffect } from 'react'
-import { AuthContext } from '../../context/Authcontext';
+import React, { useState, ChangeEvent } from 'react'
 import { makeStyles, IconButton, TextareaAutosize, Typography } from '@material-ui/core';
 import { Draggable } from 'react-beautiful-dnd'
 import DragHandleIcon from '@material-ui/icons/DragHandle';
@@ -16,7 +15,6 @@ const useStyles = makeStyles(theme => ({
     dragHandle: {
         width: '30px',
         padding: '8px',
-        // background: 'black',
     },
     input: {
         flexGrow: 1,
@@ -43,7 +41,6 @@ interface MethodItemProps {
 }
 
 const MethodItem = (props: MethodItemProps) => {
-    const { state, dispatch } = useContext(AuthContext)
     const [hover, setHover] = useState<boolean>(false)
     const classes = useStyles()
 

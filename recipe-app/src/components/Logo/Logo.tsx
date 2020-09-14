@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core'
-import { BaseProps } from '@material-ui/core/OverridableComponent'
 
 const useStyles = makeStyles(theme => ({
     root: {

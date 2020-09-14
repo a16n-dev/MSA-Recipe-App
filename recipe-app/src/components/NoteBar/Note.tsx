@@ -1,8 +1,6 @@
-import React, { useContext, useState, ChangeEvent } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, IconButton, TextareaAutosize, Typography, Card } from '@material-ui/core';
+import React from 'react'
+import { makeStyles, Typography, Card } from '@material-ui/core';
 import { Draggable } from 'react-beautiful-dnd'
-import CloseIcon from '@material-ui/icons/Close';
 import { note } from '../../types';
 const useStyles = makeStyles(theme => ({
     root: {
@@ -36,13 +34,12 @@ interface NoteProps {
     value: note
     index: number
     edit: () => void
+    delete: () => void
 }
 
 const Note = (props: NoteProps) => {
 
     const classes = useStyles()
-    const { state, dispatch } = useContext(AuthContext)
-    const [hover, setHover] = useState<boolean>(false)
 
     const {value: {title, body, id}, index, edit} = props
 

@@ -85,7 +85,7 @@ const RecipeImageForm = (props: RecipeImageFormProps) => {
 
     return (
         <div className={classes.root}>
-            <img src={`${process.env.REACT_APP_API_URL}/recipe/${recipeId}/image?${hash}`} className={classes.image}/>
+            <img src={`${process.env.REACT_APP_API_URL}/recipe/${recipeId}/image?${hash}`} className={classes.image} alt={'Recipe'}/>
             <label className={classes.overlay}>
                 <PublishIcon className={classes.overlay}/>
                 <input type='file' accept="image/*" onChange={handleSubmit} name={'upload'} className={classes.input}></input>

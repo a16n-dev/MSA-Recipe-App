@@ -1,5 +1,4 @@
 import { createMuiTheme, responsiveFontSizes } from '@material-ui/core/styles';
-import shadows from './shadows'
 import overrides from './overrides'
 import palette from './palette'
 import breakpoints from './breakpoints'

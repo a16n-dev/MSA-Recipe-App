@@ -1,6 +1,5 @@
 import {Types, InitialStateType} from './auth'
 import { user } from '../types';
-import Axios from 'axios';
 import { auth } from '../util/firebase';
 import {initialState} from './Authcontext'
 

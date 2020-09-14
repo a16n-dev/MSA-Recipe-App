@@ -1,9 +1,9 @@
 import React from 'react'
-import { makeStyles, withStyles, Button, ButtonProps, Typography } from '@material-ui/core'
-import { BaseProps } from '@material-ui/core/OverridableComponent'
+import { ButtonProps, Typography } from '@material-ui/core'
+
 import { auth, microsoftAuthProvider } from '../../util/firebase';
-import googleLogo from '../../resource/img/google.png'
-import { GoogleLoginButton, FacebookLoginButton, MicrosoftLoginButton } from 'react-social-login-buttons';
+
+import {  MicrosoftLoginButton } from 'react-social-login-buttons';
 
 const MicrosoftLogin = (props: ButtonProps) => {
 

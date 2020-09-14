@@ -1,10 +1,7 @@
-import React, { useContext } from 'react'
-import { auth, googleAuthProvider, facebookAuthProvider, microsoftAuthProvider } from '../util/firebase';
-import { AuthContext } from '../context/Authcontext';
-import { Types } from '../context/auth'
-import axios from 'axios'
-import { makeStyles, Grid, Card, CardContent, Typography, CardHeader, Divider, Button } from '@material-ui/core';
-import { FacebookLoginButton, GoogleLoginButton, MicrosoftLoginButton } from "react-social-login-buttons";
+import React from 'react'
+
+import { makeStyles, Grid, Card, CardContent, Typography, CardHeader, Divider } from '@material-ui/core';
+
 import bgImg from '../resource/img/background.jpg'
 import Logo from '../components/Logo/Logo';
 import GoogleLogin from '../components/SocialButton/GoogleLogin';

@@ -2,7 +2,7 @@ import React, { useContext, MouseEvent, Fragment, useState } from 'react'
 import { AuthContext } from '../../context/Authcontext';
 import { auth } from '../../util/firebase';
 import { useHistory } from 'react-router-dom';
-import { AppBar, Toolbar, Typography, Avatar, IconButton, Hidden, Drawer, List, ListItem, Divider, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
+import { AppBar, Toolbar, Avatar, IconButton, Hidden, Drawer, List, ListItem, Divider, Tooltip, Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';

@@ -1,16 +1,12 @@
-import React, { useContext, useState, ChangeEvent } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, IconButton, TextareaAutosize, Typography, Button, ButtonProps, Card, CardHeader, CardMedia, CardContent } from '@material-ui/core';
-import { Draggable } from 'react-beautiful-dnd'
-import CloseIcon from '@material-ui/icons/Close';
-import { note, recipe } from '../../types';
-import { Link, useHistory } from 'react-router-dom';
+import React from 'react'
+import { makeStyles, Typography, Card, CardMedia, CardContent } from '@material-ui/core';
+import { recipe } from '../../types';
+import { useHistory } from 'react-router-dom';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
 import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        // borderTop: `2px solid ${theme.palette.secondary.main}`,
         width: '300px',
         cursor: 'pointer',
         userSelect: 'none',
@@ -47,7 +43,6 @@ interface RecipeCardProps {
 const RecipeCard = (props: RecipeCardProps) => {
 
     const classes = useStyles()
-    const { state, dispatch } = useContext(AuthContext)
     const history = useHistory()
     const { recipe } = props
 

@@ -2,16 +2,7 @@ import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../context/Authcontext';
 import Axios from 'axios';
 import { recipe } from '../types';
-import { makeStyles, Typography, Divider, Grid, TextareaAutosize } from '@material-ui/core';
-import EditIngredientForm from '../components/EditIngredientForm/EditIngredientForm';
-import EditMethodForm from '../components/EditMethodForm/EditMethodForm';
-import NoteBar from '../components/NoteBar/NoteBar';
-import RecipeEditForm from '../components/forms/RecipeEditForm';
-import RecipeEditView from '../components/RecipeEditView/RecipeEditView';
-import RecipeView from '../components/RecipeView/RecipeView';
 import Loading from '../components/Loading/Loading';
-import { useSnackbar } from 'notistack';
-import { Types } from '../context/auth';
 import RecipePublicView from '../components/RecipePublicView/RecipePublicView';
 import NotFound from '../components/NotFound/NotFound';
 
@@ -24,8 +15,7 @@ interface PublicRecipeProps {
 }
 
 const PublicRecipe = (props: PublicRecipeProps) => {
-    const { state, dispatch } = useContext(AuthContext)
-    const { enqueueSnackbar } = useSnackbar();
+    const { state} = useContext(AuthContext)
     const [currentRecipe, setCurrentRecipe] = useState<recipe | undefined>(undefined)
     const [loading, setLoading] = useState(true)
 

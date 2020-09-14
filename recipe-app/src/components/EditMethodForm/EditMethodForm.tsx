@@ -1,7 +1,6 @@
-import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, Button } from '@material-ui/core';
-import { DragDropContext, Droppable,Draggable } from 'react-beautiful-dnd'
+import React, {  ChangeEvent, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import MethodItem from './MethodItem';
 
 const useStyles = makeStyles(theme => ({
@@ -19,13 +18,6 @@ interface EditMethodFormProps {
 const EditMethodForm = (props: EditMethodFormProps) => {
 
     const classes = useStyles()
-
-    const { state, dispatch } = useContext(AuthContext)
-
-    // const [listItems, setListItems] = useState<string[]>([
-    //     'do something',
-    //     'do something else !'
-    // ])
 
     const {method: listItems, setMethod: setListItems} = props
 

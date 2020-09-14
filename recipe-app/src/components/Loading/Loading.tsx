@@ -1,8 +1,7 @@
 import React from 'react'
 
-import { makeStyles, Typography, LinearProgress } from '@material-ui/core';
+import { makeStyles, LinearProgress } from '@material-ui/core';
 
-import clsx from 'clsx'
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',

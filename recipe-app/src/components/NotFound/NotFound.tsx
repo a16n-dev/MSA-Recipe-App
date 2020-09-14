@@ -1,6 +1,5 @@
 import React from 'react'
 import { makeStyles, Typography, Grid } from '@material-ui/core';
-import clsx from 'clsx';
 
 const useStyles = makeStyles(theme => ({
         root: {

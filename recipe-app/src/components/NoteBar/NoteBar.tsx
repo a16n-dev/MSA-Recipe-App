@@ -1,6 +1,5 @@
-import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, Button, Dialog, DialogContent, TextareaAutosize, Typography, Tooltip, IconButton } from '@material-ui/core';
+import React, { useState, } from 'react'
+import { makeStyles, Typography, Tooltip, IconButton } from '@material-ui/core';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Note from './Note';
 import { note } from '../../types';
@@ -36,8 +35,6 @@ interface NoteBarProps {
 const NoteBar = (props: NoteBarProps) => {
 
     const classes = useStyles()
-
-    const { state, dispatch } = useContext(AuthContext)
 
     const [dialog, setDialog] = useState<boolean>(false)
     const [selectedNote, setSelectedNote] = useState<number>(0)
@@ -109,7 +106,7 @@ const NoteBar = (props: NoteBarProps) => {
                             style={{ minHeight: `${listItems.length * 40}px` }}
                             className={classes.root}
                         >
-                            {listItems.map((e, i) => (<Note value={e} index={i} edit={() => editNote(i)}/>))}
+                            {listItems.map((e, i) => (<Note value={e} index={i} delete={() => deleteItem(i)} edit={() => editNote(i)}/>))}
                         </div>
                     )}
                 </Droppable>

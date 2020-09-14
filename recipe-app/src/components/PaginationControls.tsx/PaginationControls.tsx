@@ -32,8 +32,6 @@ interface PaginationControlsProps {
 const PaginationControls = (props: PaginationControlsProps) => {
 
     const classes = useStyles()
-
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const [page, setPage] = useState<number>(0)
 
     const { startIndex, pageCount, totalCount, setStartIndex } = props

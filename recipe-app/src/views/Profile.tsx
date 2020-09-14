@@ -1,6 +1,5 @@
 import React, {useContext, useState, useEffect} from 'react'
 import { AuthContext } from '../context/Authcontext';
-import { match } from 'react-router-dom';
 import { user } from '../types';
 import Axios from 'axios';
 import { makeStyles, Avatar, Typography } from '@material-ui/core';
@@ -35,8 +34,8 @@ interface ProfileProps {
 const Profile = (props: ProfileProps) => {
     const classes = useStyles()
 
-    const [user, setUser] = useState<user>()
-    const {state, dispatch} = useContext(AuthContext)
+    const [currentUser, setCurrentUser] = useState<user>()
+    const {state} = useContext(AuthContext)
 
     // users id from url
     const userID = props.match.params.id
@@ -49,7 +48,7 @@ const Profile = (props: ProfileProps) => {
             url: `/user/${userID}`,
             headers: {authToken: state.token}
         }).then((result) => {
-            setUser(result.data)
+            setCurrentUser(result.data)
         }).catch((err) => {
             
         });
@@ -57,14 +56,14 @@ const Profile = (props: ProfileProps) => {
     
     // If username matches currently authenicated user show controls
 
-    if(user === undefined){
+    if(currentUser === undefined){
         return <h1>404</h1>
     }
 
     return (
         <div className={classes.root}>
-            <Avatar className={classes.img} src={user.profileUrl} />
-            <Typography variant={'h3'}>{user.name}</Typography>
+            <Avatar className={classes.img} src={currentUser.profileUrl} />
+            <Typography variant={'h3'}>{currentUser.name}</Typography>
         </div>
     )
 }

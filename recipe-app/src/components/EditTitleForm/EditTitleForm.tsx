@@ -1,5 +1,4 @@
-import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
-import { AuthContext } from '../../context/Authcontext';
+import React, { ChangeEvent} from 'react'
 import { makeStyles, Input } from '@material-ui/core';
 
 const useStyles = makeStyles(theme => ({
@@ -9,7 +8,6 @@ const useStyles = makeStyles(theme => ({
         fontWeight: theme.typography.h3.fontWeight,
         letterSpacing: theme.typography.h3.letterSpacing,
         width: '100%'
-        // background: 'blue',
     }
 }));
 
@@ -22,8 +20,6 @@ interface EditTitleFormProps {
 const EditTitleForm = (props: EditTitleFormProps) => {
 
     const classes = useStyles()
-
-    const { state, dispatch } = useContext(AuthContext)
 
     const {title, setTitle,error} = props
 

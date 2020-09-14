@@ -1,12 +1,10 @@
-import React, { useContext, useState, ChangeEvent, useEffect } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, Button } from '@material-ui/core';
-import { DragDropContext, Droppable,Draggable } from 'react-beautiful-dnd'
+import React, {  ChangeEvent, useEffect } from 'react'
+import { makeStyles } from '@material-ui/core';
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import IngredientItem from './IngredientItem';
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
-        // background: 'blue',
     }
 }));
 
@@ -18,14 +16,6 @@ interface EditIngredientFormProps {
 const EditIngredientForm = (props: EditIngredientFormProps) => {
 
     const classes = useStyles()
-
-    const { state, dispatch } = useContext(AuthContext)
-
-    // const [listItems, setListItems] = useState<string[]>([
-    //     '1 egg',
-    //     '1 potato',
-    //     'something esle'
-    // ])
 
     const {ingredients: listItems, setIngredients: setListItems} = props
 

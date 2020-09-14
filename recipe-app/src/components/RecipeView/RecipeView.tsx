@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { makeStyles, Typography, Divider, Grid, Button, Hidden, Tooltip, IconButton } from '@material-ui/core';
 import NoteBar from '../NoteBar/NoteBar';
-import { recipe, note } from '../../types';
+import { recipe } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
 import MethodList from '../MethodList/MethodList';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
@@ -144,22 +144,8 @@ interface RecipeViewProps {
 const RecipeView = (props: RecipeViewProps) => {
     const classes = useStyles()
 
-    const { currentRecipe, setCurrentRecipe, setEdit } = props
+    const { currentRecipe, setEdit } = props
     const history = useHistory()
-    const handleSubmitEdits = (e: any) => {
-        setEdit(true)
-        e.preventDefault()
-        console.log(e);
-        console.log(e.target.elements);
-
-        // Send request -> patch if existing and post if new recipe
-
-        // Set state
-        setCurrentRecipe({
-            ...currentRecipe,
-        })
-        // If use was creating new recipe redirect them to the correct recipe page
-    }
 
     //Show recipe view
     return (

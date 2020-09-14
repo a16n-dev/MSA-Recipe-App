@@ -2,11 +2,6 @@ import React, { useContext, useState, useEffect } from 'react'
 import { AuthContext } from '../context/Authcontext';
 import Axios from 'axios';
 import { recipe } from '../types';
-import { makeStyles, Typography, Divider, Grid, TextareaAutosize } from '@material-ui/core';
-import EditIngredientForm from '../components/EditIngredientForm/EditIngredientForm';
-import EditMethodForm from '../components/EditMethodForm/EditMethodForm';
-import NoteBar from '../components/NoteBar/NoteBar';
-import RecipeEditForm from '../components/forms/RecipeEditForm';
 import RecipeEditView from '../components/RecipeEditView/RecipeEditView';
 import RecipeView from '../components/RecipeView/RecipeView';
 import Loading from '../components/Loading/Loading';

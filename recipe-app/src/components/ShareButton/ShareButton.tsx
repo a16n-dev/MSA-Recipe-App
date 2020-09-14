@@ -1,21 +1,12 @@
-import React, { useState} from 'react'
+import React from 'react'
 
-import { makeStyles, IconButton, TextareaAutosize, Typography, Button, MenuItem, Menu } from '@material-ui/core';
-
-const useStyles = makeStyles(theme => ({
-    root: {
-
-    },
-
-}));
+import { Button, MenuItem, Menu } from '@material-ui/core';
 
 interface ShareButtonProps {
 
 }
 
 const ShareButton = (props: ShareButtonProps) => {
-
-    const classes = useStyles()
 
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 

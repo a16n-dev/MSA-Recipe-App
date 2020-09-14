@@ -1,5 +1,4 @@
-import React, { useContext, useState, ChangeEvent } from 'react'
-import { AuthContext } from '../../context/Authcontext';
+import React, { useState, ChangeEvent } from 'react'
 import { makeStyles, IconButton } from '@material-ui/core';
 import { Draggable } from 'react-beautiful-dnd'
 import DragHandleIcon from '@material-ui/icons/DragHandle';
@@ -36,7 +35,6 @@ interface IngredientItemProps {
 const IngredientItem = (props: IngredientItemProps) => {
 
     const classes = useStyles()
-    const { state, dispatch } = useContext(AuthContext)
     const [hover, setHover] = useState<boolean>(false)
 
     const { value, index, deleteItem, onChange } = props

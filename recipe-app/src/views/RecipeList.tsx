@@ -2,8 +2,8 @@ import React, { useContext, useEffect, useState } from 'react'
 import { AuthContext } from '../context/Authcontext';
 import { recipe } from '../types';
 import axios from 'axios'
-import { Link, useHistory } from 'react-router-dom';
-import { makeStyles, Card, Grid, CardContent, Typography, Button, Select, MenuItem, IconButton, FormLabel, Tooltip, Divider } from '@material-ui/core';
+import { useHistory } from 'react-router-dom';
+import { makeStyles, Grid, Typography, Button, Select, MenuItem, IconButton, FormLabel, Tooltip } from '@material-ui/core';
 import Loading from '../components/Loading/Loading';
 import RecipeCard from '../components/RecipeCard/RecipeCard';
 import SearchBar from '../components/SearchBar/SearchBar';

@@ -1,9 +1,6 @@
-import React, { useContext, useState, ChangeEvent } from 'react'
-import { AuthContext } from '../../context/Authcontext';
-import { makeStyles, IconButton, TextareaAutosize, Typography, Button, ButtonProps } from '@material-ui/core';
-import { Draggable } from 'react-beautiful-dnd'
-import CloseIcon from '@material-ui/icons/Close';
-import { note } from '../../types';
+import React from 'react'
+import { makeStyles, Button, ButtonProps } from '@material-ui/core';
+
 const useStyles = makeStyles(theme => ({
     root: {
         '&:hover': {
@@ -26,8 +23,6 @@ interface NavLinkProps extends ButtonProps {
 const NavLink = (props: NavLinkProps) => {
 
     const classes = useStyles()
-    const { state, dispatch } = useContext(AuthContext)
-    const [hover, setHover] = useState<boolean>(false)
 
     return (
         <Button className={classes.root} {...props}>{props.children}</Button>

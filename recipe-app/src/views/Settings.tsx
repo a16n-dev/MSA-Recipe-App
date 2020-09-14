@@ -1,13 +1,11 @@
 import React, {useContext, useState, useEffect} from 'react'
 import { AuthContext } from '../context/Authcontext';
-import { match, useHistory } from 'react-router-dom';
-import { user } from '../types';
 import Axios from 'axios';
-import { makeStyles, Avatar, Typography, Grid, Divider, Button, Input, FormLabel } from '@material-ui/core';
+import { makeStyles, Typography, Grid, Divider, Button, Input, FormLabel } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import {Types} from '../context/auth'
-import ConfirmationButton from '../components/ConfimationButton/ConfirmationButton';
-import { userInfo } from 'os';
+import ConfirmationButton from '../components/ConfirmationButton/ConfirmationButton';
+
 const useStyles = makeStyles(theme => ({
     root: {
         minHeight: '100%',
@@ -43,7 +41,6 @@ const Settings = (props: SettingsProps) => {
     const classes = useStyles()
     const { enqueueSnackbar } = useSnackbar();
     const {state, dispatch} = useContext(AuthContext)
-    const history = useHistory()
 
     const [name, setName] = useState<string>('')
     const [error, setError] = useState<errors>({

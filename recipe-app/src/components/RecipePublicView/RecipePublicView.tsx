@@ -1,13 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import { makeStyles, Typography, Divider, Grid, Button, Hidden, Tooltip, IconButton } from '@material-ui/core';
-import NoteBar from '../NoteBar/NoteBar';
-import { recipe, note } from '../../types';
+import React from 'react'
+import { makeStyles, Typography, Divider, Grid, Hidden, Tooltip, IconButton } from '@material-ui/core';
+import { recipe } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
 import MethodList from '../MethodList/MethodList';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
 import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
 import ShareButton from '../ShareButton/ShareButton';
-import PublicIcon from '@material-ui/icons/Public';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import { useHistory } from 'react-router-dom';
 
