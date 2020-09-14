@@ -169,7 +169,7 @@ const RecipeView = (props: RecipeViewProps) => {
             </Tooltip>
             <div className={classes.header}>
                 {/* <Typography variant={'h3'}>{name}</Typography> */}
-                <img className={classes.image} alt={currentRecipe.name} src={`http://localhost:8000/recipe/${currentRecipe._id}/image`}></img>
+                <img className={classes.image} alt={currentRecipe.name} src={`${process.env.REACT_APP_API_URL}/recipe/${currentRecipe._id}/image`}></img>
                 <div className={classes.titleBox}>
                     <Typography variant={'h3'}>
                         {currentRecipe.name} {currentRecipe.isPublic? <Tooltip title="Public Recipe"><PublicIcon color={'secondary'}/></Tooltip> : ''}

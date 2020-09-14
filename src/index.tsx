@@ -8,6 +8,12 @@ import { AuthProvider } from './context/Authcontext';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { CssBaseline, Grow } from '@material-ui/core';
 import { SnackbarProvider } from 'notistack';
+import Axios from 'axios';
+
+if(process.env.NODE_ENV === 'production'){
+  Axios.defaults.baseURL=process.env.REACT_APP_API_URL
+}
+
 
 ReactDOM.render(
   <React.StrictMode>
