@@ -166,7 +166,7 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
                     </div>
                 </div>
                 <div className={classes.buttonBar}>
-                    <ShareButton />
+                    <ShareButton currentRecipe={currentRecipe}/>
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>

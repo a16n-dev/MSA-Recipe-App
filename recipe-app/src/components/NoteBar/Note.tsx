@@ -26,6 +26,9 @@ const useStyles = makeStyles(theme => ({
         width: '40px',
         padding: '8px',
         // background: 'black',
+    },
+    body: {
+        whiteSpace: 'pre-wrap'
     }
 
 }));
@@ -34,7 +37,6 @@ interface NoteProps {
     value: note
     index: number
     edit: () => void
-    delete: () => void
 }
 
 const Note = (props: NoteProps) => {
@@ -48,7 +50,7 @@ const Note = (props: NoteProps) => {
             {(provided, snapshot) => (
                 <Card className={classes.root} {...provided.dragHandleProps} ref={provided.innerRef} {...provided.draggableProps} onClick={edit}>
                     <Typography variant={'h6'}>{title}</Typography>
-                    <Typography>{body}</Typography>
+                    <Typography className={classes.body}>{body}</Typography>
                 </Card>
             )}
         </Draggable>

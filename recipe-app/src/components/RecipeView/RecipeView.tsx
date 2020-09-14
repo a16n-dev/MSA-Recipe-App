@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { makeStyles, Typography, Divider, Grid, Button, Hidden, Tooltip, IconButton } from '@material-ui/core';
 import NoteBar from '../NoteBar/NoteBar';
-import { recipe } from '../../types';
+import { recipe, note } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
 import MethodList from '../MethodList/MethodList';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
@@ -10,6 +10,8 @@ import ShareButton from '../ShareButton/ShareButton';
 import PublicIcon from '@material-ui/icons/Public';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import { useHistory } from 'react-router-dom';
+import Axios from 'axios';
+import { AuthContext } from '../../context/Authcontext';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -144,21 +146,39 @@ interface RecipeViewProps {
 const RecipeView = (props: RecipeViewProps) => {
     const classes = useStyles()
 
-    const { currentRecipe, setEdit } = props
+    const { state, dispatch } = useContext(AuthContext)
+
+    const { currentRecipe, setEdit, setCurrentRecipe } = props
     const history = useHistory()
+
+    const setNotes = (arr: note[]) => {
+        //Axios request
+        Axios({
+            method: 'patch',
+            url: `/recipe/${currentRecipe?._id}`,
+            headers: { authToken: state.token },
+            data: {
+                notes: arr
+            }
+        }).then((result) => {
+            setCurrentRecipe({...currentRecipe, notes: arr})
+        }).catch((err) => {
+
+        });
+    }
 
     //Show recipe view
     return (
         <div className={classes.root}>
             <Tooltip title="Back">
-                <IconButton color={'secondary'} className={classes.backButton} onClick={()=>history.push('/recipes')}><ArrowBackSharpIcon/></IconButton>
+                <IconButton color={'secondary'} className={classes.backButton} onClick={() => history.push('/recipes')}><ArrowBackSharpIcon /></IconButton>
             </Tooltip>
             <div className={classes.header}>
                 {/* <Typography variant={'h3'}>{name}</Typography> */}
                 <img className={classes.image} alt={currentRecipe.name} src={`${process.env.REACT_APP_API_URL}/recipe/${currentRecipe._id}/image`}></img>
                 <div className={classes.titleBox}>
                     <Typography variant={'h3'}>
-                        {currentRecipe.name} {currentRecipe.isPublic? <Tooltip title="Public Recipe"><PublicIcon color={'secondary'}/></Tooltip> : ''}
+                        {currentRecipe.name} {currentRecipe.isPublic ? <Tooltip title="Public Recipe"><PublicIcon color={'secondary'} /></Tooltip> : ''}
                     </Typography>
                     <Typography variant={'h5'}>{currentRecipe.authorName}</Typography>
                 </div>
@@ -167,12 +187,12 @@ const RecipeView = (props: RecipeViewProps) => {
                         <Typography><AccessTimeSharpIcon fontSize={'inherit'} /> {currentRecipe.prepTime}</Typography>
                     </div>
                     <div className={classes.infoItem}>
-    <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> {currentRecipe.servings} Serving{+currentRecipe.servings > 1 ? 's' : ''}</Typography>
+                        <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> {currentRecipe.servings} Serving{+currentRecipe.servings > 1 ? 's' : ''}</Typography>
                     </div>
                 </div>
                 <div className={classes.buttonBar}>
                     <Button onClick={() => setEdit(true)} variant={'contained'} color={'secondary'}>Edit</Button>
-                    <ShareButton />
+                    <ShareButton currentRecipe={currentRecipe} />
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>
@@ -202,7 +222,7 @@ const RecipeView = (props: RecipeViewProps) => {
                     <Divider className={classes.divider} />
                 </Hidden>
                 <Grid container item xs={12} lg={2} direction={'column'} className={classes.gridItem}>
-                    <NoteBar />
+                    <NoteBar notes={currentRecipe.notes} setNotes={setNotes} />
                 </Grid>
             </Grid>
         </div>

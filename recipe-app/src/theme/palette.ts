@@ -6,7 +6,7 @@ const palette = {
     ...theme.palette,
     primary: {
         light: '#E8B87C',
-        main: '#DC955F',
+        main: '#CE8250',
         dark: '#8E6553',
     },
     secondary: {

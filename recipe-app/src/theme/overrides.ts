@@ -116,5 +116,21 @@ export default {
         iconFilled: {
             color: palette.background.default
         },
+    },
+    MuiSwitch: {
+        switchBase: {
+            color: palette.secondary.light
+        },
+        thumb: {
+            borderRadius: 0,
+            '&:checked': {
+            }
+        },
+        track: {
+            borderRadius: 0,
+            color: `${palette.secondary.light}`,
+            '&:checked': {
+            }
+        }
     }
 }

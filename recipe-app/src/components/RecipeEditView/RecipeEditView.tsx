@@ -3,7 +3,6 @@ import { makeStyles, Typography, Divider, Grid, Button, Hidden, Input } from '@m
 import EditIngredientForm from '../EditIngredientForm/EditIngredientForm';
 import EditMethodForm from '../EditMethodForm/EditMethodForm';
 import EditTitleForm from '../EditTitleForm/EditTitleForm';
-import NoteBar from '../NoteBar/NoteBar';
 import { recipe, note } from '../../types';
 import { useSnackbar } from 'notistack';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
@@ -14,6 +13,7 @@ import { AuthContext } from '../../context/Authcontext';
 import { useHistory } from 'react-router-dom';
 import RecipeImageForm from '../RecipeImageForm/RecipeImageForm';
 import { Types } from '../../context/auth';
+import RecipeSettings from '../RecipeSettings/RecipeSettings';
 
 
 const useStyles = makeStyles(theme => ({
@@ -151,9 +151,9 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
     const [name, setName] = useState<string>('')
     const [ingredients, setIngredients] = useState<string[]>([])
     const [method, setMethod] = useState<string[]>([])
-    const [notes, setNotes] = useState<note[]>([])
     const [prepTime, setPrepTime] = useState<string>('')
     const [servings, setServings] = useState<string>('1')
+    const [isPublic, setIsPublic] = useState<boolean>(false)
     
     const [error, setError] = useState({
         name: false,
@@ -171,9 +171,9 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
         setName(currentRecipe.name)
         setIngredients(currentRecipe.ingredients)
         setMethod(currentRecipe.method)
-        setNotes(currentRecipe.notes)
         setPrepTime(currentRecipe.prepTime)
         setServings(currentRecipe.servings)
+        setIsPublic(currentRecipe.isPublic)
     }, [currentRecipe])
 
     const handleDiscardEdits = () => {
@@ -215,6 +215,7 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
     }
 
     const validate = () => {
+        console.log(isPublic);
         const saveMethod: string[] = Array.from(method)
         const saveIngredients: string[] = Array.from(ingredients)
         setError({
@@ -254,7 +255,7 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                 name,
                 ingredients: saveIngredients,
                 method: saveMethod,
-                notes,
+                isPublic,
                 prepTime,
                 servings,
             }
@@ -344,7 +345,7 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
                 </Grid>
 
                 <Grid item xs={12} lg={2} className={classes.gridItem}>
-                    <NoteBar />
+                    <RecipeSettings isPublic={isPublic} setIsPublic={setIsPublic} />
                 </Grid>
 
             </Grid>

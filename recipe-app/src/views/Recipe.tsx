@@ -72,7 +72,7 @@ const Recipe = (props: RecipeProps) => {
 
     const updateRecipe = (recipe: recipe) => {
 
-        const {name, ingredients, method, notes, prepTime, servings } = recipe
+        const {name, ingredients, method, prepTime, servings, isPublic } = recipe
 
         // Update database
         Axios({
@@ -80,7 +80,7 @@ const Recipe = (props: RecipeProps) => {
             url: `/recipe/${currentRecipe?._id}`,
             headers: {authToken: state.token},
             data: {
-                name, ingredients, method, notes, prepTime, servings
+                name, ingredients, method, prepTime, servings, isPublic
             }
         }).then((result) => {
             if(result.status===200){

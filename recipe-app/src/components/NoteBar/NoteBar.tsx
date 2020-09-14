@@ -1,8 +1,8 @@
-import React, { useState, } from 'react'
+import React, { useState, useEffect, } from 'react'
 import { makeStyles, Typography, Tooltip, IconButton } from '@material-ui/core';
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Note from './Note';
-import { note } from '../../types';
+import { note } from '../../types'
 import { v4 as uuidv4 } from 'uuid';
 import NoteDialog from './NoteDialog';
 import AddSharpIcon from '@material-ui/icons/AddSharp';
@@ -29,24 +29,30 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface NoteBarProps {
-
+    notes: note[]
+    setNotes: (notes: note[]) => void
 }
 
 const NoteBar = (props: NoteBarProps) => {
 
     const classes = useStyles()
 
+    const { notes, setNotes } = props
+
     const [dialog, setDialog] = useState<boolean>(false)
     const [selectedNote, setSelectedNote] = useState<number>(0)
-    const [listItems, setListItems] = useState<note[]>([
-        { title: 'think abt this', body: 'some text', id: uuidv4() }
-    ])
+    const [listItems, setListItems] = useState<note[]>([])
+
+    useEffect(() => {
+        setListItems(notes)
+    }, [notes])
 
     const deleteItem = (index: number) => {
         console.log(`deleting ${index}`);
         const arr: any[] = Array.from(listItems)
         arr.splice(index, 1);
         setListItems(arr)
+        setNotes(arr)
     }
 
     const reorder = (list: Iterable<unknown> | ArrayLike<unknown>, startIndex: number, endIndex: number) => {
@@ -60,7 +66,7 @@ const NoteBar = (props: NoteBarProps) => {
     const addNote = () => {
         const id = uuidv4()
         setListItems([...listItems, {
-            title: 'new note',
+            title: '',
             body: '',
             id
         }])
@@ -87,29 +93,37 @@ const NoteBar = (props: NoteBarProps) => {
         setDialog(true)
     }
 
+    const setNote = (currentNote: note) => {
+        const arr = Array.from(listItems)
+        arr[selectedNote] = currentNote
+        setListItems(arr)
+        setNotes(arr)
+    }
+
     return (
         <>
-            <NoteDialog notes={listItems} index={selectedNote} open={dialog} setOpen={setDialog} setNotes={setListItems}/>
+            {dialog ? <NoteDialog currentNote={listItems[selectedNote]} open={dialog} setOpen={setDialog} deleteNote={() => {setDialog(false);deleteItem(selectedNote)}} setNote={setNote} /> : ''}
             <DragDropContext onDragEnd={onDragEnd}>
-                <div className={classes.tileBar}>
-                <Typography variant={'h5'} >Notes</Typography>
-                <Tooltip title="Create new note">
-                <IconButton onClick={addNote} size={'small'} color={'secondary'}><AddSharpIcon/></IconButton>
-                </Tooltip>
-                </div>
+                <div className={classes.root}>
+                    <div className={classes.tileBar}>
+                        <Typography variant={'h5'} >Notes</Typography>
+                        <Tooltip title="Create new note">
+                            <IconButton onClick={addNote} size={'small'} color={'secondary'}><AddSharpIcon /></IconButton>
+                        </Tooltip>
+                    </div>
 
-                <Droppable droppableId="droppable" >
-                    {(provided, snapshot) => (
-                        <div
-                            {...provided.droppableProps}
-                            ref={provided.innerRef}
-                            style={{ minHeight: `${listItems.length * 40}px` }}
-                            className={classes.root}
-                        >
-                            {listItems.map((e, i) => (<Note value={e} index={i} delete={() => deleteItem(i)} edit={() => editNote(i)}/>))}
-                        </div>
-                    )}
-                </Droppable>
+                    {listItems.length > 0? <Droppable droppableId="droppable" >
+                        {(provided, snapshot) => (
+                            <div
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                style={{ minHeight: `${listItems.length * 40}px` }}
+                            >
+                                {listItems.map((e, i) => (<Note value={e} index={i} edit={() => editNote(i)} />))}
+                            </div>
+                        )}
+                    </Droppable> : 'No notes for this recipe yet'}
+                </div>
             </DragDropContext>
         </>
     )

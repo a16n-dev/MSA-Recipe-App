@@ -29,47 +29,45 @@ const useStyles = makeStyles(theme => ({
 }));
 
 interface NoteDialogProps {
-    notes: note[]
-    setNotes: React.Dispatch<React.SetStateAction<note[]>>
-    index: number
-    open: boolean
+    currentNote: note
     setOpen: React.Dispatch<React.SetStateAction<boolean>>
+    open: boolean
+    setNote: (currentNote: note) => void
+    deleteNote: () => void
 }
 
 const NoteDialog = (props: NoteDialogProps) => {
 
     const classes = useStyles()
 
-    const [currentNote, setCurrentNote] = useState<note>({
+    const [editNote, setEditNote] = useState<note>({
         title: '',
         body: '',
         id: ''
     })
 
-    const {notes, index, open, setOpen,setNotes} = props
+    const {currentNote, open, setOpen, setNote, deleteNote } = props
 
     useEffect(()=>{
-        setCurrentNote(notes[index])
+        setEditNote(currentNote)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [index])
+    }, [currentNote])
 
     const handleClose = () => {
         setOpen(false)
-        const arr: note[] = Array.from(notes)
-        arr.splice(index, 1)
-        setNotes([currentNote, ...arr])
+        setNote(editNote)
     }
 
     const handleChange = (e: ChangeEvent<HTMLTextAreaElement>, body: boolean) => {
 
         if (body) {
-            setCurrentNote({
-                ...currentNote, 
+            setEditNote({
+                ...editNote, 
                 body: e.target.value
             })
         } else {
-            setCurrentNote({
-                ...currentNote, 
+            setEditNote({
+                ...editNote, 
                 title: e.target.value
             })        
         }
@@ -78,11 +76,11 @@ const NoteDialog = (props: NoteDialogProps) => {
     return (
         <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open}>
         <DialogContent dividers>
-            <TextareaAutosize className={classes.inputTitle} value={currentNote.title} placeholder={'Take note'} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { handleChange(e, false) }}></TextareaAutosize>
-            <TextareaAutosize className={classes.input} value={currentNote.body} placeholder={'notes here'} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { handleChange(e, true) }}></TextareaAutosize>
+            <TextareaAutosize className={classes.inputTitle} value={editNote.title} placeholder={'Note Title'} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { handleChange(e, false) }}></TextareaAutosize>
+            <TextareaAutosize className={classes.input} value={editNote.body} placeholder={'notes here'} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { handleChange(e, true) }}></TextareaAutosize>
         </DialogContent>
         <DialogActions>
-          <Button autoFocus color="secondary" variant={'contained'}>
+          <Button autoFocus color="secondary" onClick={deleteNote} variant={'contained'}>
             Delete
           </Button>
           <Button autoFocus color="secondary" variant={'contained'} onClick={handleClose}>
