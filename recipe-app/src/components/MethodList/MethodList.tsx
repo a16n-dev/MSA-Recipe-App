@@ -1,5 +1,6 @@
 import React from 'react'
 import { makeStyles } from '@material-ui/core';
+import ListItem from './ListItem';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -18,9 +19,9 @@ const MethodList = (props: MethodListProps) => {
     const { method } = props
 
     return (
-        <ol className={classes.root} >
-            {method.map((e, i) => (<li>{e}</li>))}
-        </ol>
+        <div className={classes.root} >
+            {method.map((e, i) => (<ListItem value={e} index={i} />))}
+        </div>
 
     )
 }

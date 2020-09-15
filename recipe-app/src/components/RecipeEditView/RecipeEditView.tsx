@@ -31,6 +31,9 @@ const useStyles = makeStyles(theme => ({
             position: 'static',
             top: 'auto',
             bottom: 'auto',
+            width: '100%',
+            margin: 0,
+            padding: theme.spacing(2),
         },
     },
     detailContainer: {
@@ -71,7 +74,7 @@ const useStyles = makeStyles(theme => ({
             textAlign: 'left',
         },
         [theme.breakpoints.down('md')]: {
-            height: 'min-content',
+            height: 'initial',
         }
     },
     author: {

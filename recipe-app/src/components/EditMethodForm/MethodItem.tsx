@@ -1,20 +1,34 @@
 import React, { useState, ChangeEvent } from 'react'
 import { makeStyles, IconButton, TextareaAutosize, Typography } from '@material-ui/core';
 import { Draggable } from 'react-beautiful-dnd'
-import DragHandleIcon from '@material-ui/icons/DragHandle';
+import DragIndicatorIcon from '@material-ui/icons/DragIndicator';
 import CloseIcon from '@material-ui/icons/Close';
 const useStyles = makeStyles(theme => ({
     root: {
         display: 'flex',
+        position: 'relative',
         boxSizing: 'border-box',
         userSelect: 'none',
         background: 'white',
         minHeight: '50px',
-        marginBottom: theme.spacing(2)
+        marginBottom: theme.spacing(2),
+        boxShadow: theme.shadows['2']
     },
     dragHandle: {
         width: '30px',
-        padding: '8px',
+        padding: '5px',
+        display: 'flex',
+        alignItems: 'center',
+        '&:hover': {
+            backgroundColor: theme.palette.grey['100']
+        },
+        '&:active': {
+            backgroundColor: theme.palette.grey['100']
+        }
+    },
+    handleIcon: {
+        color: theme.palette.grey['400'],
+        height: '20px'
     },
     input: {
         flexGrow: 1,
@@ -29,6 +43,13 @@ const useStyles = makeStyles(theme => ({
     textContainer: {
         flexGrow: 1,
         padding: theme.spacing(1),
+    },
+    deleteButton: {
+        width: '40px',
+        height: '40px',
+        padding: '10px',
+        position: 'absolute',
+        right: 0
     }
 
 }));
@@ -55,14 +76,14 @@ const MethodItem = (props: MethodItemProps) => {
                         className={classes.dragHandle}
 
                     >
-                        <DragHandleIcon />
+                        <DragIndicatorIcon className={classes.handleIcon} />
                     </div>
 
                     <div className={classes.textContainer}>
                         <Typography variant={'caption'}>Step {index + 1}</Typography><br />
                         <TextareaAutosize className={classes.input} value={value} placeholder={'Add step'} onChange={(e: ChangeEvent<HTMLTextAreaElement>) => { onChange(e, index) }}></TextareaAutosize>
                     </div>
-                    {hover && value !== '' ? <IconButton onClick={() => { deleteItem(index) }}>
+                    {hover && value !== '' ? <IconButton className={classes.deleteButton} onClick={() => { deleteItem(index) }}>
                         <CloseIcon />
                     </IconButton> : ''}
                 </div>

@@ -70,6 +70,20 @@ const EditIngredientForm = (props: EditIngredientFormProps) => {
         setListItems(items)
     }
 
+    const handleNavigateNext = (index: number) => {
+        const next = document.getElementById(`ingredient${index+1}`)
+        if(next){
+            next.focus()
+        }
+    }
+
+    const handleNavigatePrevious = (index: number) => {
+        const prev = document.getElementById(`ingredient${index-1}`)
+        if(prev){
+            prev.focus()
+        }
+    }
+
     return (
 
 
@@ -79,10 +93,10 @@ const EditIngredientForm = (props: EditIngredientFormProps) => {
                         <div
                             {...provided.droppableProps}
                             ref={provided.innerRef}
-                            style={{height: `${listItems.length * 40}px`}}
+                            style={{height: `${listItems.length * 48}px`}}
                             className={classes.root}
                         >
-                            {listItems.map((e, i) => (<IngredientItem onChange={handleChange} deleteItem={deleteItem} value={e} key={i} index={i} />))}
+                            {listItems.map((e, i) => (<IngredientItem onPrevious={() => handleNavigatePrevious(i)} onEnter={()=>handleNavigateNext(i)} onChange={handleChange} deleteItem={deleteItem} value={e} key={i} index={i} />))}
                         </div>
                     )}
                     

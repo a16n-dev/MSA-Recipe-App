@@ -6,7 +6,9 @@ import MethodItem from './MethodItem';
 const useStyles = makeStyles(theme => ({
     root: {
         width: '100%',
-        // background: 'blue',
+        [theme.breakpoints.down('xs')]: {
+            height: 'initial !important'
+        }
     }
 }));
 

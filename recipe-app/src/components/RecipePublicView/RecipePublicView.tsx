@@ -9,7 +9,7 @@ import ShareButton from '../ShareButton/ShareButton';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import { useHistory } from 'react-router-dom';
 import Spacer from '../Spacer';
-
+import MetaTags from 'react-meta-tags';
 const useStyles = makeStyles(theme => ({
     root: {
         position: 'absolute',
@@ -160,9 +160,15 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
 
     //Show recipe view
     return (
+        <>
+        <MetaTags>
+            <meta property="og:title" content={currentRecipe.name}/>
+            <meta property="og:description" content={`Created by ${currentRecipe.authorName}`}/>
+            <meta property="og:image" content={`${process.env.REACT_APP_API_URL}/recipe/${currentRecipe._id}/image`}/>
+        </MetaTags>
         <div className={classes.root}>
             <Tooltip title="Back">
-                <IconButton color={'secondary'} className={classes.backButton} onClick={() => history.push('/recipes')}><ArrowBackSharpIcon /></IconButton>
+                <IconButton color={'secondary'} className={classes.backButton} onClick={() => history.goBack()}><ArrowBackSharpIcon /></IconButton>
             </Tooltip>
             <div className={classes.header}>
                 <img className={classes.image} alt={currentRecipe.name} src={`${process.env.REACT_APP_API_URL}/recipe/${currentRecipe._id}/image`}></img>
@@ -171,9 +177,6 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
                         {currentRecipe.name}
                     </Typography>
                     <Grid container item alignItems={'center'} spacing={2} onClick={handleRedirectProfile} className={classes.authorBox}>
-                        <Grid item>
-                            <Avatar />
-                        </Grid>
                         <Grid item>
                         <Typography variant={'h5'}>{currentRecipe.authorName}</Typography>
                         </Grid>
@@ -213,7 +216,7 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
                 </Grid>
             </Grid>
         </div>
-
+    </>
     )
 }
 

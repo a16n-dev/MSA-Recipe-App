@@ -6,7 +6,9 @@ import clsx from 'clsx'
 const useStyles = makeStyles(theme => ({
     root: {
         lineHeight: '40px',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2),
     },
     alt: {
         background: theme.palette.grey['100']
