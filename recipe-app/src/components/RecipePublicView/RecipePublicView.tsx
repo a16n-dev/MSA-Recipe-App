@@ -1,5 +1,5 @@
 import React from 'react'
-import { makeStyles, Typography, Divider, Grid, Hidden, Tooltip, IconButton } from '@material-ui/core';
+import { makeStyles, Typography, Divider, Grid, Hidden, Tooltip, IconButton, Avatar } from '@material-ui/core';
 import { recipe } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
 import MethodList from '../MethodList/MethodList';
@@ -8,6 +8,7 @@ import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
 import ShareButton from '../ShareButton/ShareButton';
 import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import { useHistory } from 'react-router-dom';
+import Spacer from '../Spacer';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -129,6 +130,15 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.down('xs')]: {
             left: 16
         },
+    },
+    authorBox: {
+        cursor: 'pointer',
+        '&:hover': {
+            color: theme.palette.primary.main
+        },
+        [theme.breakpoints.down('xs')]: {
+            justifyContent: 'center'
+        }
     }
 
 }));
@@ -143,11 +153,16 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
     const { currentRecipe } = props
     const history = useHistory()
 
+    const handleRedirectProfile = () => {
+        console.log(currentRecipe.user);
+        history.push(`/user/${currentRecipe.user}`)
+    }
+
     //Show recipe view
     return (
         <div className={classes.root}>
             <Tooltip title="Back">
-                <IconButton color={'secondary'} className={classes.backButton} onClick={()=>history.push('/recipes')}><ArrowBackSharpIcon/></IconButton>
+                <IconButton color={'secondary'} className={classes.backButton} onClick={() => history.push('/recipes')}><ArrowBackSharpIcon /></IconButton>
             </Tooltip>
             <div className={classes.header}>
                 <img className={classes.image} alt={currentRecipe.name} src={`${process.env.REACT_APP_API_URL}/recipe/${currentRecipe._id}/image`}></img>
@@ -155,18 +170,25 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
                     <Typography variant={'h3'}>
                         {currentRecipe.name}
                     </Typography>
-                    <Typography variant={'h5'}>{currentRecipe.authorName}</Typography>
+                    <Grid container item alignItems={'center'} spacing={2} onClick={handleRedirectProfile} className={classes.authorBox}>
+                        <Grid item>
+                            <Avatar />
+                        </Grid>
+                        <Grid item>
+                        <Typography variant={'h5'}>{currentRecipe.authorName}</Typography>
+                        </Grid>
+                    </Grid>
                 </div>
                 <div className={classes.infoBox}>
                     <div className={classes.infoItem}>
                         <Typography><AccessTimeSharpIcon fontSize={'inherit'} /> {currentRecipe.prepTime}</Typography>
                     </div>
                     <div className={classes.infoItem}>
-    <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> {currentRecipe.servings} Serving{+currentRecipe.servings > 1 ? 's' : ''}</Typography>
+                        <Typography><PeopleAltSharpIcon fontSize={'inherit'} /> {currentRecipe.servings} Serving{+currentRecipe.servings > 1 ? 's' : ''}</Typography>
                     </div>
                 </div>
                 <div className={classes.buttonBar}>
-                    <ShareButton currentRecipe={currentRecipe}/>
+                    <ShareButton currentRecipe={currentRecipe} />
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>

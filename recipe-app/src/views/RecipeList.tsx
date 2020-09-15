@@ -29,6 +29,9 @@ const useStyles = makeStyles(theme => ({
         position: 'absolute',
         top: 0,
         bottom: 0,
+        [theme.breakpoints.down('xs')]: {
+            position: 'initial',
+        }
     },
     controlBar: {
         display: 'flex',
@@ -46,6 +49,9 @@ const useStyles = makeStyles(theme => ({
     },
     resultsContainer: {
         overflowY: 'auto',
+        [theme.breakpoints.down('xs')]: {
+            overflowY: 'initial',
+        }
     },
     results: {
         justifyItems: 'center',

@@ -49,7 +49,7 @@ const IngredientItem = (props: IngredientItemProps) => {
                     >
                         <DragHandleIcon/>
                     </div>
-                    <input className={classes.input} value={value} placeholder={'new ingredient'} onChange={(e: ChangeEvent<HTMLInputElement>) => {onChange(e, index)}}></input>
+                    <input className={classes.input} value={value} placeholder={'new ingredient'} tabIndex={100 + index} onChange={(e: ChangeEvent<HTMLInputElement>) => {onChange(e, index)}}></input>
                     {hover && value !== '' ? <IconButton onClick={()=>{deleteItem(index)}}>
                         <CloseIcon color={'secondary'}/>
                     </IconButton> : ''}

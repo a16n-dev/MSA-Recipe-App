@@ -7,6 +7,7 @@ export type recipe = {
     method: string[]
     notes: note[],
     authorName: string
+    user?: string
     isPublic: boolean
     createdAt?: string
     updatedAt?: string
