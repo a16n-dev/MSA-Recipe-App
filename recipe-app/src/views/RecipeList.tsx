@@ -150,6 +150,26 @@ const RecipeList = (props: RecipeListProps) => {
         return (<Loading />)
     }
 
+    const filterList = (v: recipe, i: number) => {
+        if(query[0] === '@'){
+            if(query === '@public'){
+                return v.isPublic
+            } else if (query === '@private'){
+                return !v.isPublic
+            } else if (query.match('^@ingredient:(.*)')){
+                const q = query.match('^@ingredient:(.*)')
+                if(q){
+
+                    return v.ingredients.some(e => e.toLowerCase().includes(q[1]))
+                }
+            }
+            return true
+        } else {
+            return v.name.toLowerCase().includes(query)
+        }
+    }
+ 
+
     const showPlaceholder = () => (
         <Grid container direction={'column'} justify={'center'} spacing={2} alignItems={'center'} className={classes.placeholder}>
             <Grid item>
@@ -228,11 +248,7 @@ const RecipeList = (props: RecipeListProps) => {
                 <div className={classes.resultsContainer}>
                     <div className={classes.results}>
                         {sortedList.length > 0 ? (
-                            sortedList.filter((v, i) => {
-                                return v.name.toLowerCase().includes(query)
-                            }).length > 0 ? sortedList.filter((v, i) => {
-                                return v.name.toLowerCase().includes(query)
-                            }).splice(startIndex, pageAmount).map(e => (
+                            sortedList.filter(filterList).length > 0 ? sortedList.filter(filterList).splice(startIndex, pageAmount).map(e => (
                                 <RecipeCard recipe={e} />
                             )) : 'Try something else') : 'No recipes'}
 

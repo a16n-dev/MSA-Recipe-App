@@ -56,7 +56,7 @@ const PublicRecipeCard = (props: PublicRecipeCardProps) => {
             <CardContent>
                 <Typography variant={'h6'}>{recipe.name}</Typography>
             </CardContent>
-            <CardMedia image={`${process.env.REACT_APP_API_URL}/recipe/${recipe._id}/image`} className={classes.media} />
+            <CardMedia image={`${process.env.REACT_APP_API_URL}/recipe/${recipe._id}/image?${recipe.updatedAt}`} className={classes.media} />
             <CardContent>
                 <div className={classes.infoBox}>
                     <div className={classes.infoItem}>

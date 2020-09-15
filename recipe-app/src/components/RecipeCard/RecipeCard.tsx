@@ -1,9 +1,10 @@
 import React from 'react'
-import { makeStyles, Typography, Card, CardMedia, CardContent } from '@material-ui/core';
+import { makeStyles, Typography, Card, CardMedia, CardContent, Tooltip, Grid } from '@material-ui/core';
 import { recipe } from '../../types';
 import { useHistory } from 'react-router-dom';
 import AccessTimeSharpIcon from '@material-ui/icons/AccessTimeSharp';
 import PeopleAltSharpIcon from '@material-ui/icons/PeopleAltSharp';
+import PublicIcon from '@material-ui/icons/Public';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -53,9 +54,12 @@ const RecipeCard = (props: RecipeCardProps) => {
     return (
         <Card className={classes.root} onClick={handleClick}>
             <CardContent>
+                <Grid container justify={'space-between'}>
                 <Typography variant={'h6'}>{recipe.name}</Typography>
+                {recipe.isPublic ? <Tooltip title="Public Recipe"><PublicIcon color={'secondary'} /></Tooltip> : ''}
+                </Grid>
             </CardContent>
-            <CardMedia image={`${process.env.REACT_APP_API_URL}/recipe/${recipe._id}/image`} className={classes.media} />
+            <CardMedia image={`${process.env.REACT_APP_API_URL}/recipe/${recipe._id}/image?${recipe.updatedAt}`} className={classes.media} />
             <CardContent>
                 <div className={classes.infoBox}>
                     <div className={classes.infoItem}>

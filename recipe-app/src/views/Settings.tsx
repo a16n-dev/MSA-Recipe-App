@@ -5,6 +5,7 @@ import { makeStyles, Typography, Grid, Divider, Button, Input, FormLabel } from 
 import { useSnackbar } from 'notistack';
 import {Types} from '../context/auth'
 import ConfirmationButton from '../components/ConfirmationButton/ConfirmationButton';
+import UserImageForm from '../components/UserImageForm/UserImageForm';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -24,8 +25,14 @@ const useStyles = makeStyles(theme => ({
     },
     inputGroup: {
         display: 'grid',
-        gridTemplateColumns: '60px auto 1fr',
-        alignItems: 'center'
+        gridTemplateColumns: '100px auto 1fr',
+        alignItems: 'start',
+        columnGap: theme.spacing(2),
+        [theme.breakpoints.down('xs')]: {
+            gridTemplateColumns: ' 1fr',
+            gridTemplateRows: 'auto auto',
+            rowGap: `${theme.spacing(2)}px`,
+        }
     }
 }));
 
@@ -116,6 +123,10 @@ const Settings = (props: SettingsProps) => {
                     <FormLabel>Name</FormLabel> 
                     <Input value={name} error={error.name} onChange={(e)=>{setName(e.target.value)}}/>
                 </Grid>
+                <Grid item className={classes.inputGroup}>
+                    <FormLabel>Profile image</FormLabel> 
+                    <UserImageForm/>
+                </Grid>
                 <Divider/>
                 <Grid item><Typography variant={'h6'}>Account</Typography></Grid>
                 <Grid item>
@@ -127,7 +138,7 @@ const Settings = (props: SettingsProps) => {
                   >
                     Delete Account</ConfirmationButton>
                 </Grid>
-                <Grid item><Typography variant={'caption'}>Warning: this cannot be undone</Typography></Grid>
+                <Divider/>
             </Grid>
             <div>
                 <Button onClick={handleSubmit} variant={'contained'} color={'secondary'}>Save User Settings</Button>

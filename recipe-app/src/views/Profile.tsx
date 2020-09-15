@@ -5,6 +5,7 @@ import Axios from 'axios';
 import { makeStyles, Avatar, Typography, Divider, Grid } from '@material-ui/core';
 import RecipeCard from '../components/RecipeCard/RecipeCard';
 import PublicRecipeCard from '../components/PublicRecipeCard/PublicRecipeCard';
+import NotFound from '../components/NotFound/NotFound';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -76,7 +77,7 @@ const Profile = (props: ProfileProps) => {
     // If username matches currently authenicated user show controls
 
     if(currentUser === undefined){
-        return <h1>404</h1>
+        return <NotFound message={'This user does not exist'}/>
     }
 
     return (
