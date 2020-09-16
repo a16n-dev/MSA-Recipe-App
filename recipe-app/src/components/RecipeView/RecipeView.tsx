@@ -196,7 +196,7 @@ const RecipeView = (props: RecipeViewProps) => {
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>
-                <Grid item xs={12} sm={4} md={2} className={classes.gridItem}>
+                <Grid item xs={12} sm={4} lg={2} className={classes.gridItem}>
                     <Typography variant={'h5'} className={classes.sectionHeader}>Ingredients</Typography>
                     <IngredientList ingredients={currentRecipe.ingredients} />
                 </Grid>
@@ -205,7 +205,7 @@ const RecipeView = (props: RecipeViewProps) => {
                     <Divider className={classes.divider} />
                 </Hidden>
 
-                <Grid item container xs={12} sm={8} md={10} lg={8} >
+                <Grid item container xs={12} sm={8} >
                     <Hidden xsDown>
                         <Divider orientation="vertical" flexItem />
                     </Hidden>

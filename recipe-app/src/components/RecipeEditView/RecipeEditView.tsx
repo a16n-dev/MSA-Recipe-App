@@ -330,12 +330,12 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>
 
-                <Grid item xs={12} sm={4} md={2} className={classes.gridItem}>
+                <Grid item xs={12} sm={4} lg={2} className={classes.gridItem}>
                     <Typography variant={'h5'} className={classes.sectionHeader}>Ingredients</Typography>
                     <EditIngredientForm ingredients={ingredients} setIngredients={setIngredients} />
                 </Grid>
 
-                <Grid container item xs={12} sm={8} md={10} lg={8}>
+                <Grid container item xs={12} sm={8}>
                 <Hidden xsDown>
                         <Divider orientation="vertical" flexItem />
                     </Hidden>
