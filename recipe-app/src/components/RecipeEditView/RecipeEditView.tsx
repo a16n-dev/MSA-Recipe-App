@@ -211,6 +211,7 @@ const RecipeEditView = (props: RecipeEditViewProps) => {
         }).then((res) => {
             if (res.status === 200) {
                 history.push('/recipes')
+                dispatch({type:Types.DontStay});
             }
         }).catch((err) => {
             enqueueSnackbar('Could not delete recipe', { variant: 'error' })

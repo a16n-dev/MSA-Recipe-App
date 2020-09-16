@@ -1,7 +1,6 @@
 import React, { useContext } from 'react';
 import Home from './views/Home';
 import { Switch, Route } from 'react-router-dom';
-import Dashboard from './views/Dashboard';
 import PublicRoute from './components/PublicRoute/PublicRoute';
 import Navbar from './components/Navbar/Navbar';
 import PrivateRoute from './components/PrivateRoute/PrivateRoute';
@@ -68,7 +67,6 @@ const App = () => {
       <div className={classes.pageContainer} id={'page-container'}>
       
       <Switch>
-        <PrivateRoute exact path={'/dashboard'} component={Dashboard}/>
         <PrivateRoute exact path={'/settings'} component={Settings}/>
         <PrivateRoute exact path={'/explore/saved'} component={RecipeListSaved}/>
         <PrivateRoute exact path={'/recipes'} component={RecipeList}/>

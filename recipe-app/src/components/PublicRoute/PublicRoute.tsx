@@ -4,7 +4,7 @@ import { Redirect, Route, RouteProps } from 'react-router-dom';
 import Loading from '../Loading/Loading';
 
 /*
-Pulbic route which will redirect the user to thier dashboard if they are already authenticated.
+Pulbic route which will redirect the user to thier recipes if they are already authenticated.
 TODO: Add a proper loading animation component
 */
 const PublicRoute = ({component: Component, ...rest}: RouteProps) => {
@@ -22,7 +22,7 @@ const PublicRoute = ({component: Component, ...rest}: RouteProps) => {
     return (
         <Route {...rest} render={props => (
             state.user !== null ?
-                <Redirect to="/dashboard" />
+                <Redirect to="/recipes" />
                 : <Component {...props}/>
         )} />
     )

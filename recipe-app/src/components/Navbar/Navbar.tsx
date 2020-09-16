@@ -85,7 +85,7 @@ const Navbar = (props: NavbarProps) => {
     }
 
     const redirectHome = () => {
-        redirect('/dashboard')
+        redirect('/recipes')
     }
 
     const redirectNewRecipe = () => {
@@ -127,7 +127,7 @@ const Navbar = (props: NavbarProps) => {
         navContent = (
             <Hidden xsDown>
                 <div className={classes.leftButtonGroup}>
-                    <NavLink onClick={redirectHome}>Home</NavLink>
+                    {/* <NavLink onClick={redirectHome}>Home</NavLink> */}
                     <NavLink onClick={redirectRecipeList}>My Recipes</NavLink>
                     <NavLink onClick={redirectRecipeListSaved}>Saved Recipes</NavLink>
                     <NavLink onClick={redirectNewRecipe}>Create New Recipe</NavLink>
@@ -184,7 +184,7 @@ const Navbar = (props: NavbarProps) => {
             {state.user?
             <>
                 <Divider className={classes.divider} />
-                    <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink onClick={redirectHome}>Home</NavLink></ListItem>
+                    {/* <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink onClick={redirectHome}>Home</NavLink></ListItem> */}
                     <ListItem button={true} onClick={() => {redirectRecipeListSaved(); setDrawer(false)}}><NavLink onClick={redirectRecipeListSaved}>Saved Recipes</NavLink></ListItem>
                     <ListItem button={true} onClick={() => {redirectRecipeList(); setDrawer(false)}}><NavLink onClick={redirectRecipeList}>My Recipes</NavLink></ListItem>
                     <ListItem button={true} onClick={() => {redirectNewRecipe(); setDrawer(false)}}><NavLink onClick={redirectNewRecipe}>Create New Recipe</NavLink></ListItem>

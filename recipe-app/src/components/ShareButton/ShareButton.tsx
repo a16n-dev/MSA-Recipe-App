@@ -55,10 +55,10 @@ const ShareButton = (props: ShareButtonProps) => {
   const handleGetShareableLink = () => {
     handleClose()
     TinyURL.shorten(`http://braize.azurewebsites.net/explore/recipes/${currentRecipe._id}`).then(function (res: any) {
-      navigator.clipboard.writeText(res).then(function() {
+      (window as any).navigator.clipboard.writeText(res).then(function() {
         console.log('Async: Copying to clipboard was successful!');
         enqueueSnackbar('Link copied to clipboard', {variant: 'success'})
-      }, function(err) {
+      }, function(err: any) {
         console.error('Async: Could not copy text: ', err);
       });
       console.log(res)
