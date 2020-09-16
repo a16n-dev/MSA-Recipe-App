@@ -3,6 +3,7 @@ import TinyURL from 'tinyurl';
 import { Button, MenuItem, Menu } from '@material-ui/core';
 import { useSnackbar } from 'notistack';
 import { recipe } from '../../types';
+import copy from 'clipboard-copy'
 interface ShareButtonProps {
   currentRecipe: recipe
 }
@@ -17,20 +18,20 @@ const ShareButton = (props: ShareButtonProps) => {
 
   useEffect(() => {
     const script = document.createElement('script');
-  
+
     script.src = "https://connect.facebook.net/en_US/sdk.js";
     script.async = true;
     script.crossOrigin = 'anonymous'
     script.defer = true
-  
+
     document.body.appendChild(script);
-  
-    (window as any).fbAsyncInit = function() {
+
+    (window as any).fbAsyncInit = function () {
       (window as any).FB.init({
-        appId            : '2819298801632743',
-        autoLogAppEvents : true,
-        xfbml            : true,
-        version          : 'v8.0'
+        appId: '2819298801632743',
+        autoLogAppEvents: true,
+        xfbml: true,
+        version: 'v8.0'
       });
     }
 
@@ -55,10 +56,10 @@ const ShareButton = (props: ShareButtonProps) => {
   const handleGetShareableLink = () => {
     handleClose()
     TinyURL.shorten(`http://braize.azurewebsites.net/explore/recipes/${currentRecipe._id}`).then(function (res: any) {
-      (window as any).navigator.clipboard.writeText(res).then(function() {
+      copy(res).then(() => {
         console.log('Async: Copying to clipboard was successful!');
-        enqueueSnackbar('Link copied to clipboard', {variant: 'success'})
-      }, function(err: any) {
+        enqueueSnackbar('Link copied to clipboard', { variant: 'success' })
+      }, function (err: any) {
         console.error('Async: Could not copy text: ', err);
       });
       console.log(res)
@@ -80,11 +81,11 @@ const ShareButton = (props: ShareButtonProps) => {
 
 
   return (
-    
-        <>
+
+    <>
       <Button onClick={handleClick} variant={'contained'} color={'secondary'} aria-controls="simple-menu" aria-haspopup="true">
         Share
-        </Button>
+      </Button>
       <Menu
         id="simple-menu"
         anchorEl={anchorEl}
@@ -95,7 +96,7 @@ const ShareButton = (props: ShareButtonProps) => {
         <MenuItem onClick={handleGetShareableLink}>Get shareable link</MenuItem>
         <MenuItem onClick={handleShareToFacebook}>Share via facebook</MenuItem>
       </Menu>
-      </>
+    </>
   )
 }
 
