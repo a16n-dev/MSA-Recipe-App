@@ -34,7 +34,10 @@ const useStyles = makeStyles(theme => ({
         marginLeft: theme.spacing(2)
     },
     leftButtonGroup: {
-        flexGrow: 1
+        display: 'flex',
+        flexGrow: 1,
+        overflowX: 'hidden',
+        flexWrap: 'nowrap'
     },
     divider: {
         backgroundColor: theme.palette.grey['700']
@@ -93,6 +96,10 @@ const Navbar = (props: NavbarProps) => {
         redirect('/recipes')
     }
 
+    const redirectRecipeListSaved = () => {
+        redirect('/explore/saved')
+    }
+
     const redirectProfile = () => {
         redirect(`/user/${state.user._id}`)
     }
@@ -122,6 +129,7 @@ const Navbar = (props: NavbarProps) => {
                 <div className={classes.leftButtonGroup}>
                     <NavLink onClick={redirectHome}>Home</NavLink>
                     <NavLink onClick={redirectRecipeList}>My Recipes</NavLink>
+                    <NavLink onClick={redirectRecipeListSaved}>Saved Recipes</NavLink>
                     <NavLink onClick={redirectNewRecipe}>Create New Recipe</NavLink>
                 </div>
                 <NavLink onClick={redirectProfile}>My Profile</NavLink>
@@ -177,6 +185,7 @@ const Navbar = (props: NavbarProps) => {
             <>
                 <Divider className={classes.divider} />
                     <ListItem button={true} onClick={() => {setDrawer(false)}}><NavLink onClick={redirectHome}>Home</NavLink></ListItem>
+                    <ListItem button={true} onClick={() => {redirectRecipeListSaved(); setDrawer(false)}}><NavLink onClick={redirectRecipeListSaved}>Saved Recipes</NavLink></ListItem>
                     <ListItem button={true} onClick={() => {redirectRecipeList(); setDrawer(false)}}><NavLink onClick={redirectRecipeList}>My Recipes</NavLink></ListItem>
                     <ListItem button={true} onClick={() => {redirectNewRecipe(); setDrawer(false)}}><NavLink onClick={redirectNewRecipe}>Create New Recipe</NavLink></ListItem>
                     <Divider className={classes.spacer} />

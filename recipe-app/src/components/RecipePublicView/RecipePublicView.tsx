@@ -1,5 +1,5 @@
-import React from 'react'
-import { makeStyles, Typography, Divider, Grid, Hidden, Tooltip, IconButton, Avatar } from '@material-ui/core';
+import React, { useContext } from 'react'
+import { makeStyles, Typography, Divider, Grid, Hidden, Tooltip, IconButton, Avatar, Button } from '@material-ui/core';
 import { recipe } from '../../types';
 import IngredientList from '../IngredientList/IngredientList';
 import MethodList from '../MethodList/MethodList';
@@ -10,6 +10,11 @@ import ArrowBackSharpIcon from '@material-ui/icons/ArrowBackSharp';
 import { useHistory } from 'react-router-dom';
 import Spacer from '../Spacer';
 import MetaTags from 'react-meta-tags';
+import { AuthContext } from '../../context/Authcontext';
+import ClearIcon from '@material-ui/icons/Clear';
+import CheckIcon from '@material-ui/icons/Check';
+import Axios from 'axios';
+import { useSnackbar } from 'notistack';
 const useStyles = makeStyles(theme => ({
     root: {
         position: 'absolute',
@@ -145,17 +150,54 @@ const useStyles = makeStyles(theme => ({
 
 interface RecipePublicViewProps {
     currentRecipe: recipe
+    setCurrentRecipe: React.Dispatch<React.SetStateAction<recipe | undefined>>
 }
 
 const RecipePublicView = (props: RecipePublicViewProps) => {
     const classes = useStyles()
 
-    const { currentRecipe } = props
+    const {state} = useContext(AuthContext)
+    const { enqueueSnackbar } = useSnackbar();
+    const { currentRecipe, setCurrentRecipe } = props
     const history = useHistory()
 
     const handleRedirectProfile = () => {
         console.log(currentRecipe.user);
         history.push(`/user/${currentRecipe.user}`)
+    }
+
+    const handleToggleSave = () => {
+        if(currentRecipe.subscribed){
+            //unsub
+            Axios({
+                method: 'post',
+                url: `/recipe/public/${currentRecipe._id}/unsubscribe`,
+                headers: {authToken: state.token}
+            }).then((result) => {
+                enqueueSnackbar('Recipe removed')
+                setCurrentRecipe({
+                    ...currentRecipe,
+                    subscribed: false
+                })
+            }).catch((err) => {
+                
+            });
+        } else {
+            //subscribe
+            Axios({
+                method: 'post',
+                url: `/recipe/public/${currentRecipe._id}/subscribe`,
+                headers: {authToken: state.token}
+            }).then((result) => {
+                enqueueSnackbar('Recipe saved')
+                setCurrentRecipe({
+                    ...currentRecipe,
+                    subscribed: true
+                })
+            }).catch((err) => {
+                
+            });
+        }
     }
 
     //Show recipe view
@@ -192,6 +234,9 @@ const RecipePublicView = (props: RecipePublicViewProps) => {
                 </div>
                 <div className={classes.buttonBar}>
                     <ShareButton currentRecipe={currentRecipe} />
+                    {state.user && state.user._id !== currentRecipe.user?
+                    <Button onClick={handleToggleSave} startIcon={currentRecipe.subscribed? <ClearIcon /> : <CheckIcon />} variant={'contained'} color={'secondary'}>{currentRecipe.subscribed? 'Remove from saved' : 'Save Recipe'}</Button>
+                    : ''}
                 </div>
             </div>
             <Grid container alignContent='stretch' className={classes.detailContainer}>

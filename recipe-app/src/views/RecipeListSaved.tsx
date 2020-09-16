@@ -12,6 +12,7 @@ import ArrowDropUpSharpIcon from '@material-ui/icons/ArrowDropUpSharp';
 import Spacer from '../components/Spacer';
 import { sortByName, sortByModified, sortByCreated } from '../util/recipeSorting';
 import PaginationControls from '../components/PaginationControls.tsx/PaginationControls';
+import PublicRecipeCard from '../components/PublicRecipeCard/PublicRecipeCard';
 enum Sort {
     name,
     modified,
@@ -85,11 +86,11 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-interface RecipeListProps {
+interface RecipeListSavedProps {
 
 }
 
-const RecipeList = (props: RecipeListProps) => {
+const RecipeListSaved = (props: RecipeListSavedProps) => {
 
     const classes = useStyles()
 
@@ -112,7 +113,7 @@ const RecipeList = (props: RecipeListProps) => {
         console.log(axios.defaults.baseURL);
         axios({
             method: 'get',
-            url: '/recipe',
+            url: '/subscriptions',
             headers: { authToken: state.token }
         }).then(({ data, ...rest }) => {
             console.log(data);
@@ -175,11 +176,8 @@ const RecipeList = (props: RecipeListProps) => {
 
     const showPlaceholder = () => (
         <Grid container direction={'column'} justify={'center'} spacing={2} alignItems={'center'} className={classes.placeholder}>
-            <Grid item>
+            <Grid item xs>
                 <Typography>Looks like theres nothing here yet!</Typography>
-            </Grid>
-            <Grid item>
-                <Button color={'secondary'} variant={'contained'} onClick={()=>{history.push('./recipes/new')}}>Add a Recipe</Button>
             </Grid>
         </Grid>
     )
@@ -187,7 +185,7 @@ const RecipeList = (props: RecipeListProps) => {
     return (
         <div className={classes.root}>
 
-            <div className={classes.controlBar}><Typography className={classes.title} variant={'h4'}>My Recipes</Typography>
+            <div className={classes.controlBar}><Typography className={classes.title} variant={'h4'}>Saved Recipes</Typography>
                 <Spacer expand />
                 <div className={classes.controlGroup}>
                     <FormLabel className={classes.label}>Results per page</FormLabel>
@@ -252,7 +250,7 @@ const RecipeList = (props: RecipeListProps) => {
                     <div className={classes.results}>
                         {sortedList.length > 0 ? (
                             sortedList.filter(filterList).length > 0 ? sortedList.filter(filterList).splice(startIndex, pageAmount).map(e => (
-                                <RecipeCard recipe={e} />
+                                <PublicRecipeCard recipe={e} />
                             )) : 'Try something else') : 'No recipes'}
 
                     </div>
@@ -268,4 +266,4 @@ const RecipeList = (props: RecipeListProps) => {
     )
 }
 
-export default RecipeList
+export default RecipeListSaved

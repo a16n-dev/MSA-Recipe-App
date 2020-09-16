@@ -11,7 +11,8 @@ const useStyles = makeStyles(theme => ({
 
     },
     inputContainer: {
-        boxShadow: theme.shadows['2']
+        boxShadow: theme.shadows['2'],
+        width: '221px'
     },
     input: {
         outline: 'none',

@@ -11,6 +11,7 @@ export type recipe = {
     isPublic: boolean
     createdAt?: string
     updatedAt?: string
+    subscribed?: boolean
 }
 
 export type user = {

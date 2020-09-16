@@ -5,6 +5,7 @@ import { recipe } from '../types';
 import Loading from '../components/Loading/Loading';
 import RecipePublicView from '../components/RecipePublicView/RecipePublicView';
 import NotFound from '../components/NotFound/NotFound';
+import { useSnackbar } from 'notistack';
 
 interface PublicRecipeProps {
     match: {
@@ -18,7 +19,6 @@ const PublicRecipe = (props: PublicRecipeProps) => {
     const { state} = useContext(AuthContext)
     const [currentRecipe, setCurrentRecipe] = useState<recipe | undefined>(undefined)
     const [loading, setLoading] = useState(true)
-
     const recipeID = props.match.params.id
 
     // Fetch recipe. 
@@ -26,6 +26,7 @@ const PublicRecipe = (props: PublicRecipeProps) => {
             Axios({
                 method: 'get',
                 url: `/recipe/public/${recipeID}`,
+                headers: {authToken: state.token}
             }).then((result) => {
                 console.log(result);
                 setCurrentRecipe(result.data)
@@ -45,7 +46,7 @@ const PublicRecipe = (props: PublicRecipeProps) => {
 
     //Show recipe view
     return (
-        <RecipePublicView currentRecipe={currentRecipe}/>
+        <RecipePublicView setCurrentRecipe={setCurrentRecipe} currentRecipe={currentRecipe}/>
     )
 }
 

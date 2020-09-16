@@ -15,6 +15,7 @@ import { Types } from './context/auth';
 import Profile from './views/Profile';
 import Settings from './views/Settings';
 import PublicRecipe from './views/PublicRecipe'
+import RecipeListSaved from './views/RecipeListSaved';
 const useStyles = makeStyles(theme => ({
   root: {
     height: '100vh',
@@ -69,6 +70,7 @@ const App = () => {
       <Switch>
         <PrivateRoute exact path={'/dashboard'} component={Dashboard}/>
         <PrivateRoute exact path={'/settings'} component={Settings}/>
+        <PrivateRoute exact path={'/explore/saved'} component={RecipeListSaved}/>
         <PrivateRoute exact path={'/recipes'} component={RecipeList}/>
         <PrivateRoute exact path={'/recipes/:id'} component={Recipe}/>
         <Route exact path={'/user/:id'} component={Profile}/>

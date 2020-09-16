@@ -31,7 +31,6 @@ const useStyles = makeStyles(theme => ({
     },
     infoItem: {
         display: 'flex',
-        width: '120px',
         alignItems: 'center',
         marginTop: '4px'
     },
@@ -59,6 +58,9 @@ const PublicRecipeCard = (props: PublicRecipeCardProps) => {
             <CardMedia image={`${process.env.REACT_APP_API_URL}/recipe/${recipe._id}/image?${recipe.updatedAt}`} className={classes.media} />
             <CardContent>
                 <div className={classes.infoBox}>
+                <div className={classes.infoItem}>
+                        <Typography> {recipe.authorName}</Typography>
+                    </div>
                     <div className={classes.infoItem}>
                         <Typography><AccessTimeSharpIcon fontSize={'inherit'} /> {recipe.prepTime}</Typography>
                     </div>
